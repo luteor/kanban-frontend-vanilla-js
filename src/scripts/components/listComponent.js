@@ -11,7 +11,18 @@ export const listenToClickOnOpenAddListModalButton = () => {
   openAddListModalButtonElement.addEventListener("click", openAddListModal);
 };
 
-const addListToListsContainer = () => {};
+const addListToListsContainer = (addListData) => {
+  const listsContainerElement = document.querySelector("#lists-container");
+
+  const listTemplateElement = document.querySelector("#list-template");
+
+  const newListElement = listTemplateElement.content.cloneNode(true);
+
+  newListElement.querySelector(`[slot="list-name"]`).textContent =
+    addListData.name;
+
+  listsContainerElement.appendChild(newListElement);
+};
 
 export const listenToSubmitOnAddListForm = () => {
   const addListFormElement = document.querySelector(".modal-card form");
@@ -19,12 +30,12 @@ export const listenToSubmitOnAddListForm = () => {
   addListFormElement.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    const formData = new FormData(addListFormElement);
-    console.log(Object.fromEntries(formData));
+    const addListFormData = new FormData(addListFormElement);
+    const addListData = Object.fromEntries(addListFormData);
 
     addListFormElement.reset();
 
-    addListToListsContainer(formData);
+    addListToListsContainer(addListData);
 
     closeModals();
   });
