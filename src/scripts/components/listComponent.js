@@ -1,3 +1,5 @@
+import { closeModals } from "../utils/utils";
+
 const openAddListModal = () => {
   const addListModalElement = document.querySelector("#add-list-modal");
   addListModalElement.classList.add("is-active");
@@ -23,5 +25,7 @@ export const listenToSubmitOnAddListForm = () => {
     addListFormElement.reset();
 
     addListToListsContainer(formData);
+
+    closeModals();
   });
 };

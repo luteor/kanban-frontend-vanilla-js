@@ -1,4 +1,4 @@
-const closeModals = () => {
+export const closeModals = () => {
   const modalElement = document.querySelector(".modal");
   modalElement.classList.remove("is-active");
 };
