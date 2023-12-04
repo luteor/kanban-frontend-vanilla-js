@@ -3,7 +3,8 @@ const openAddListModal = () => {
   addListModalElement.classList.add("is-active");
 };
 
-export const listenToSubmitOnOpenListModalButton = () => {
-  const addListButtonElement = document.querySelector("#add-list-button");
-  addListButtonElement.addEventListener("click", openAddListModal);
+export const listenToClickOnOpenAddListModalButton = () => {
+  const openAddListModalButtonElement =
+    document.querySelector("#add-list-button");
+  openAddListModalButtonElement.addEventListener("click", openAddListModal);
 };

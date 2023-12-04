@@ -1,7 +1,9 @@
-import { listenToSubmitOnOpenListModalButton } from "./components/listComponent";
+import { listenToClickOnOpenAddListModalButton } from "./components/listComponent";
+import { listenToClickOnCloseModalButtonsAndOnModalBackground } from "./utils/utils";
 
 const listenToUserActions = () => {
-  listenToSubmitOnOpenListModalButton();
+  listenToClickOnOpenAddListModalButton();
+  listenToClickOnCloseModalButtonsAndOnModalBackground();
 };
 
 listenToUserActions();
