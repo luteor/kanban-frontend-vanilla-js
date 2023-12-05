@@ -1,3 +1,4 @@
+import { listenToSubmitOnAddCardForm } from "./components/cardComponent";
 import {
   listenToClickOnOpenAddListModalButton,
   listenToSubmitOnAddListForm,
@@ -8,6 +9,7 @@ const listenToUserActions = () => {
   listenToClickOnOpenAddListModalButton();
   listenToClickOnCloseModalButtonsAndOnModalBackground();
   listenToSubmitOnAddListForm();
+  listenToSubmitOnAddCardForm();
 };
 
 listenToUserActions();

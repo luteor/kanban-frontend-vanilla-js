@@ -1,4 +1,4 @@
-import { closeModals } from "../utils/utils";
+import { closeModals, generateRandomId } from "../utils/utils";
 import { listenToClickOnOpenAddCardModalButton } from "./cardComponent";
 
 export const openAddListModal = () => {
@@ -22,7 +22,12 @@ const addListToListsContainer = (addListData) => {
   newListElement.querySelector(`[slot="list-name"]`).textContent =
     addListData.name;
 
+  const listId = generateRandomId();
+
+  newListElement.querySelector(`[slot="list-id"]`).id = `list-${listId}`;
+
   listsContainerElement.appendChild(newListElement);
+  listenToClickOnOpenAddCardModalButton(listId);
 };
 
 export const listenToSubmitOnAddListForm = () => {
@@ -37,8 +42,6 @@ export const listenToSubmitOnAddListForm = () => {
     addListFormElement.reset();
 
     addListToListsContainer(addListData);
-
-    listenToClickOnOpenAddCardModalButton();
 
     closeModals();
   });

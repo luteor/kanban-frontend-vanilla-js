@@ -17,3 +17,8 @@ export const listenToClickOnCloseModalButtonsAndOnModalBackground = () => {
     element.addEventListener("click", closeModals);
   });
 };
+
+export const generateRandomId = () => {
+  const randomId = Math.floor(Math.random() * 100).toString();
+  return randomId;
+};
