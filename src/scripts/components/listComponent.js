@@ -1,6 +1,7 @@
 import { closeModals } from "../utils/utils";
+import { listenToClickOnOpenAddCardModalButton } from "./cardComponent";
 
-const openAddListModal = () => {
+export const openAddListModal = () => {
   const addListModalElement = document.querySelector("#add-list-modal");
   addListModalElement.classList.add("is-active");
 };
@@ -36,6 +37,8 @@ export const listenToSubmitOnAddListForm = () => {
     addListFormElement.reset();
 
     addListToListsContainer(addListData);
+
+    listenToClickOnOpenAddCardModalButton();
 
     closeModals();
   });

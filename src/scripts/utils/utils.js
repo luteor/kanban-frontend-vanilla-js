@@ -1,6 +1,8 @@
 export const closeModals = () => {
-  const modalElement = document.querySelector(".modal");
-  modalElement.classList.remove("is-active");
+  const modalElements = document.querySelectorAll(".modal");
+  modalElements.forEach((element) => {
+    element.classList.remove("is-active");
+  });
 };
 
 export const listenToClickOnCloseModalButtonsAndOnModalBackground = () => {
@@ -9,6 +11,9 @@ export const listenToClickOnCloseModalButtonsAndOnModalBackground = () => {
     element.addEventListener("click", closeModals);
   });
 
-  const modalBackgroundElement = document.querySelector(".modal-background");
-  modalBackgroundElement.addEventListener("click", closeModals);
+  const modalBackgroundElements =
+    document.querySelectorAll(".modal-background");
+  modalBackgroundElements.forEach((element) => {
+    element.addEventListener("click", closeModals);
+  });
 };
