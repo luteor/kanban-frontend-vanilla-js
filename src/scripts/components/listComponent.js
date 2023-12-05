@@ -13,20 +13,19 @@ export const listenToClickOnOpenAddListModalButton = () => {
 };
 
 const addListToListsContainer = (addListData) => {
+  const listId = generateRandomId();
+
   const listsContainerElement = document.querySelector("#lists-container");
 
   const listTemplateElement = document.querySelector("#list-template");
 
   const newListElement = listTemplateElement.content.cloneNode(true);
-
   newListElement.querySelector(`[slot="list-name"]`).textContent =
     addListData.name;
-
-  const listId = generateRandomId();
-
   newListElement.querySelector(`[slot="list-id"]`).id = `list-${listId}`;
 
   listsContainerElement.appendChild(newListElement);
+
   listenToClickOnOpenAddCardModalButton(listId);
 };
 
@@ -39,9 +38,9 @@ export const listenToSubmitOnAddListForm = () => {
     const addListFormData = new FormData(addListFormElement);
     const addListData = Object.fromEntries(addListFormData);
 
-    addListFormElement.reset();
-
     addListToListsContainer(addListData);
+
+    addListFormElement.reset();
 
     closeModals();
   });

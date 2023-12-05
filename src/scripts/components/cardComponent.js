@@ -1,4 +1,4 @@
-import { closeModals } from "../utils/utils";
+import { closeModals, generateRandomId } from "../utils/utils";
 
 const openAddCardModal = (listId) => {
   const addCardModalElement = document.querySelector("#add-card-modal");
@@ -16,8 +16,9 @@ export const listenToClickOnOpenAddCardModalButton = (listId) => {
 };
 
 const addCardToCardsListContainer = (addCardData, listId) => {
-  const listElement = document.querySelector(`#list-${listId}`);
+  const cardId = generateRandomId();
 
+  const listElement = document.querySelector(`#list-${listId}`);
   const cardsListContainerElement =
     listElement.querySelector(`[slot=list-content]`);
 
@@ -26,6 +27,7 @@ const addCardToCardsListContainer = (addCardData, listId) => {
   const newCardElement = cardTemplateElement.content.cloneNode(true);
   newCardElement.querySelector(`[slot="card-title"]`).textContent =
     addCardData.title;
+  newCardElement.querySelector(`[slot="card-id"]`).id = `card-${cardId}`;
 
   cardsListContainerElement.appendChild(newCardElement);
 };
@@ -42,9 +44,9 @@ export const listenToSubmitOnAddCardForm = () => {
 
     const listId = addCardModalElement.dataset.listId;
 
-    addCardFormElement.reset();
-
     addCardToCardsListContainer(addCardData, listId);
+
+    addCardFormElement.reset();
 
     closeModals();
   });
