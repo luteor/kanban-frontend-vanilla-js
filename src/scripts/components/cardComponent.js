@@ -18,7 +18,6 @@ export const listenToClickOnOpenAddCardModalButton = (listId) => {
 
 export const addCardToCardsListContainer = (addCardData, listId) => {
   const cardId = addCardData.id;
-  console.log(addCardData);
 
   const listElement = document.querySelector(`#list-${listId}`);
   const cardsListContainerElement =

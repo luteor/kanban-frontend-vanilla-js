@@ -1,3 +1,4 @@
+import { createList } from "../api/listApi";
 import { closeModals } from "../utils/utils";
 import { listenToClickOnOpenAddCardModalButton } from "./cardComponent";
 
@@ -37,6 +38,8 @@ export const listenToSubmitOnAddListForm = () => {
 
     const addListFormData = new FormData(addListFormElement);
     const addListData = Object.fromEntries(addListFormData);
+
+    createList(addListData);
 
     addListToListsContainer(addListData);
 
