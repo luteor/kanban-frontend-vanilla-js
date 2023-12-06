@@ -7,11 +7,13 @@ const openAddCardModal = (listId) => {
 };
 
 export const listenToClickOnOpenAddCardModalButton = (listId) => {
-  const openAddCardModalButtonElement = document.querySelector(
+  const openAddCardModalButtonElements = document.querySelectorAll(
     `[slot="add-card-button"]`
   );
-  openAddCardModalButtonElement.addEventListener("click", () => {
-    openAddCardModal(listId);
+  openAddCardModalButtonElements.forEach((element) => {
+    element.addEventListener("click", () => {
+      openAddCardModal(listId);
+    });
   });
 };
 

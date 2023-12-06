@@ -1,7 +1,7 @@
 import { closeModals, generateRandomId } from "../utils/utils";
 import { listenToClickOnOpenAddCardModalButton } from "./cardComponent";
 
-export const openAddListModal = () => {
+const openAddListModal = () => {
   const addListModalElement = document.querySelector("#add-list-modal");
   addListModalElement.classList.add("is-active");
 };
@@ -12,7 +12,7 @@ export const listenToClickOnOpenAddListModalButton = () => {
   openAddListModalButtonElement.addEventListener("click", openAddListModal);
 };
 
-const addListToListsContainer = (addListData) => {
+export const addListToListsContainer = (addListData) => {
   const listId = generateRandomId();
 
   const listsContainerElement = document.querySelector("#lists-container");
