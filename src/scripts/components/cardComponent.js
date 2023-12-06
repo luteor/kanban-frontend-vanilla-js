@@ -17,10 +17,10 @@ export const listenToClickOnOpenAddCardModalButton = (listId) => {
   });
 };
 
-export const addCardToCardsListContainer = (addCardData, listId) => {
+export const addCardToCardsListContainer = (addCardData) => {
   const cardId = addCardData.id;
 
-  const listElement = document.querySelector(`#list-${listId}`);
+  const listElement = document.querySelector(`#list-${addCardData.list_id}`);
   const cardsListContainerElement =
     listElement.querySelector(`[slot=list-content]`);
 
@@ -41,7 +41,7 @@ export const listenToSubmitOnAddCardForm = () => {
   const addCardModalElement = document.querySelector("#add-card-modal");
   const addCardFormElement = addCardModalElement.querySelector("form");
 
-  addCardFormElement.addEventListener("submit", (event) => {
+  addCardFormElement.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const addCardFormData = new FormData(addCardFormElement);
@@ -49,9 +49,9 @@ export const listenToSubmitOnAddCardForm = () => {
 
     const listId = addCardModalElement.dataset.listId;
 
-    createCard(addCardData, listId);
+    const createdCard = await createCard(addCardData, listId);
 
-    addCardToCardsListContainer(addCardData, listId);
+    addCardToCardsListContainer(createdCard);
 
     addCardFormElement.reset();
 
