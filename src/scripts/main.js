@@ -2,6 +2,7 @@ import { getAllLists } from "./api/listApi";
 import {
   addCardToCardsListContainer,
   listenToSubmitOnAddCardForm,
+  listenToSubmitOnEditCardForm,
 } from "./components/cardComponent";
 import {
   addListToListsContainer,
@@ -29,6 +30,7 @@ const listenToUserActions = () => {
   listenToSubmitOnAddListForm();
   listenToSubmitOnAddCardForm();
   listenToSubmitOnEditListForm();
+  listenToSubmitOnEditCardForm();
 };
 
 displayExistingListsWithCards();

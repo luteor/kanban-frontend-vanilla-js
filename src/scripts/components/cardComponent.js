@@ -1,4 +1,4 @@
-import { createCard } from "../api/cardApi";
+import { createCard, modifyCard } from "../api/cardApi";
 import { closeModals } from "../utils/utils";
 
 const openAddCardModal = (listId) => {
@@ -35,6 +35,8 @@ export const addCardToCardsListContainer = (addCardData) => {
   ).style.backgroundColor = `${addCardData.color}`;
 
   cardsListContainerElement.appendChild(newCardElement);
+
+  listenToClickOnOpenEditCardModalButton(cardId);
 };
 
 export const listenToSubmitOnAddCardForm = () => {
@@ -54,6 +56,58 @@ export const listenToSubmitOnAddCardForm = () => {
     addCardToCardsListContainer(createdCard);
 
     addCardFormElement.reset();
+
+    closeModals();
+  });
+};
+
+const openEditCardModal = (cardId) => {
+  const editCardModalElement = document.querySelector("#edit-card-modal");
+  editCardModalElement.classList.add("is-active");
+  editCardModalElement.dataset.cardId = cardId;
+
+  const currentCardName = document.querySelector(
+    `#card-${cardId} [slot="card-title"]`
+  ).textContent;
+
+  const newCardNameElement = editCardModalElement.querySelector("input");
+  newCardNameElement.placeholder = currentCardName;
+};
+
+export const listenToClickOnOpenEditCardModalButton = (cardId) => {
+  const openEditCardModalButtonElement = document.querySelector(
+    `#card-${cardId} [slot="card-edit-button"]`
+  );
+
+  openEditCardModalButtonElement.addEventListener("click", () => {
+    openEditCardModal(cardId);
+  });
+};
+
+export const updateCardInCardsListContainer = (editCardData) => {
+  const cardNameElement = document.querySelector(
+    `#card-${editCardData.id} [slot="card-title"]`
+  );
+  cardNameElement.textContent = editCardData.title;
+};
+
+export const listenToSubmitOnEditCardForm = () => {
+  const editCardModalElement = document.querySelector("#edit-card-modal");
+  const editCardFormElement = editCardModalElement.querySelector("form");
+
+  editCardFormElement.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const editCardFormData = new FormData(editCardFormElement);
+    const editCardData = Object.fromEntries(editCardFormData);
+
+    const cardId = editCardModalElement.dataset.cardId;
+
+    const updatedCard = await modifyCard(editCardData, cardId);
+
+    updateCardInCardsListContainer(updatedCard);
+
+    editCardFormElement.reset();
 
     closeModals();
   });

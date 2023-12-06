@@ -29,3 +29,28 @@ export const createCard = async (cardData, listId) => {
     console.error(error);
   }
 };
+
+export const modifyCard = async (cardData, cardId) => {
+  try {
+    const response = await fetch(`${apiBaseUrl}/cards/${cardId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(cardData),
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(
+        `Request failed with status ${response.status}: ${errorMessage}`
+      );
+    }
+
+    const updatedCard = await response.json();
+    return updatedCard;
+  } catch (error) {
+    console.error(error);
+  }
+};
