@@ -17,6 +17,7 @@ const displayExistingListsWithCards = async () => {
 
     const cards = list.cards;
     cards.forEach((card) => {
+      console.log(card);
       addCardToCardsListContainer(card, list.id);
     });
   });
