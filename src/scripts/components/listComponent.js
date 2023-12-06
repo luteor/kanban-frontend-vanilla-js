@@ -33,14 +33,14 @@ export const addListToListsContainer = (addListData) => {
 };
 
 export const listenToSubmitOnAddListForm = () => {
-  const addListFormElement = document.querySelector(".modal-card form");
+  const addListModalElement = document.querySelector("#add-list-modal");
+  const addListFormElement = addListModalElement.querySelector("form");
 
   addListFormElement.addEventListener("submit", (event) => {
     event.preventDefault();
 
     const addListFormData = new FormData(addListFormElement);
     const addListData = Object.fromEntries(addListFormData);
-    console.log(addListData);
 
     createList(addListData);
 
@@ -57,14 +57,12 @@ const openEditListModal = (listId) => {
   editListModalElement.classList.add("is-active");
   editListModalElement.dataset.listId = listId;
 
-  const actualListName = document.querySelector(
+  const currentListName = document.querySelector(
     `#list-${listId} [slot="list-name"]`
   ).textContent;
-  console.log(actualListName);
 
   const newListNameElement = editListModalElement.querySelector("input");
-  console.log(newListNameElement);
-  newListNameElement.placeholder = actualListName;
+  newListNameElement.placeholder = currentListName;
 };
 
 export const listenToClickOnOpenEditListModalButton = (listId) => {
@@ -74,5 +72,33 @@ export const listenToClickOnOpenEditListModalButton = (listId) => {
 
   openEditListModalButtonElement.addEventListener("click", () => {
     openEditListModal(listId);
+  });
+};
+
+export const updateListInListsContainer = (editListData, listId) => {
+  const listNameElement = document.querySelector(
+    `#list-${listId} [slot="list-name"]`
+  );
+  listNameElement.textContent = editListData.name;
+};
+
+export const listenToSubmitOnEditListForm = () => {
+  const editListModalElement = document.querySelector("#edit-list-modal");
+  const editListFormElement = editListModalElement.querySelector("form");
+
+  console.log(editListFormElement);
+  editListFormElement.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const editListFormData = new FormData(editListFormElement);
+    const editListData = Object.fromEntries(editListFormData);
+
+    const listId = editListModalElement.dataset.listId;
+
+    updateListInListsContainer(editListData, listId);
+
+    editListFormElement.reset();
+
+    closeModals();
   });
 };
