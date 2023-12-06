@@ -36,15 +36,15 @@ export const listenToSubmitOnAddListForm = () => {
   const addListModalElement = document.querySelector("#add-list-modal");
   const addListFormElement = addListModalElement.querySelector("form");
 
-  addListFormElement.addEventListener("submit", (event) => {
+  addListFormElement.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const addListFormData = new FormData(addListFormElement);
     const addListData = Object.fromEntries(addListFormData);
 
-    createList(addListData);
+    const createdList = await createList(addListData);
 
-    addListToListsContainer(addListData);
+    addListToListsContainer(createdList);
 
     addListFormElement.reset();
 
@@ -75,9 +75,9 @@ export const listenToClickOnOpenEditListModalButton = (listId) => {
   });
 };
 
-export const updateListInListsContainer = (editListData, listId) => {
+export const updateListInListsContainer = (editListData) => {
   const listNameElement = document.querySelector(
-    `#list-${listId} [slot="list-name"]`
+    `#list-${editListData.id} [slot="list-name"]`
   );
   listNameElement.textContent = editListData.name;
 };
@@ -86,7 +86,7 @@ export const listenToSubmitOnEditListForm = () => {
   const editListModalElement = document.querySelector("#edit-list-modal");
   const editListFormElement = editListModalElement.querySelector("form");
 
-  editListFormElement.addEventListener("submit", (event) => {
+  editListFormElement.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const editListFormData = new FormData(editListFormElement);
@@ -94,9 +94,9 @@ export const listenToSubmitOnEditListForm = () => {
 
     const listId = editListModalElement.dataset.listId;
 
-    modifyList(editListData, listId);
+    const updatedList = await modifyList(editListData, listId);
 
-    updateListInListsContainer(editListData, listId);
+    updateListInListsContainer(updatedList);
 
     editListFormElement.reset();
 
