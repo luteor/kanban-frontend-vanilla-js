@@ -42,3 +42,28 @@ export const createList = async (listData) => {
     console.error(error);
   }
 };
+
+export const modifyList = async (listData, listId) => {
+  try {
+    const response = await fetch(`${apiBaseUrl}/lists/${listId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(listData),
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(
+        `Request failed with status ${response.status}: ${errorMessage}`
+      );
+    }
+
+    const updatedList = await response.json();
+    return updatedList;
+  } catch (error) {
+    console.error(error);
+  }
+};

@@ -1,4 +1,4 @@
-import { createList } from "../api/listApi";
+import { createList, modifyList } from "../api/listApi";
 import { closeModals } from "../utils/utils";
 import { listenToClickOnOpenAddCardModalButton } from "./cardComponent";
 
@@ -86,7 +86,6 @@ export const listenToSubmitOnEditListForm = () => {
   const editListModalElement = document.querySelector("#edit-list-modal");
   const editListFormElement = editListModalElement.querySelector("form");
 
-  console.log(editListFormElement);
   editListFormElement.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -94,6 +93,8 @@ export const listenToSubmitOnEditListForm = () => {
     const editListData = Object.fromEntries(editListFormData);
 
     const listId = editListModalElement.dataset.listId;
+
+    modifyList(editListData, listId);
 
     updateListInListsContainer(editListData, listId);
 
