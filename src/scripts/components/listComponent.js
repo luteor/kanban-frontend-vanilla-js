@@ -1,4 +1,4 @@
-import { closeModals, generateRandomId } from "../utils/utils";
+import { closeModals } from "../utils/utils";
 import { listenToClickOnOpenAddCardModalButton } from "./cardComponent";
 
 const openAddListModal = () => {
@@ -13,7 +13,7 @@ export const listenToClickOnOpenAddListModalButton = () => {
 };
 
 export const addListToListsContainer = (addListData) => {
-  const listId = generateRandomId();
+  const listId = addListData.id;
 
   const listsContainerElement = document.querySelector("#lists-container");
 

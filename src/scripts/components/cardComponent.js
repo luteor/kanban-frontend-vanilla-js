@@ -1,4 +1,4 @@
-import { closeModals, generateRandomId } from "../utils/utils";
+import { closeModals } from "../utils/utils";
 
 const openAddCardModal = (listId) => {
   const addCardModalElement = document.querySelector("#add-card-modal");
@@ -7,18 +7,17 @@ const openAddCardModal = (listId) => {
 };
 
 export const listenToClickOnOpenAddCardModalButton = (listId) => {
-  const openAddCardModalButtonElements = document.querySelectorAll(
-    `[slot="add-card-button"]`
+  const openAddCardModalButtonElement = document.querySelector(
+    `#list-${listId}`
   );
-  openAddCardModalButtonElements.forEach((element) => {
-    element.addEventListener("click", () => {
-      openAddCardModal(listId);
-    });
+
+  openAddCardModalButtonElement.addEventListener("click", () => {
+    openAddCardModal(listId);
   });
 };
 
 const addCardToCardsListContainer = (addCardData, listId) => {
-  const cardId = generateRandomId();
+  const cardId = listId;
 
   const listElement = document.querySelector(`#list-${listId}`);
   const cardsListContainerElement =
