@@ -56,6 +56,15 @@ const openEditListModal = (listId) => {
   const editListModalElement = document.querySelector("#edit-list-modal");
   editListModalElement.classList.add("is-active");
   editListModalElement.dataset.listId = listId;
+
+  const actualListName = document.querySelector(
+    `#list-${listId} [slot="list-name"]`
+  ).textContent;
+  console.log(actualListName);
+
+  const newListNameElement = editListModalElement.querySelector("input");
+  console.log(newListNameElement);
+  newListNameElement.placeholder = actualListName;
 };
 
 export const listenToClickOnOpenEditListModalButton = (listId) => {
