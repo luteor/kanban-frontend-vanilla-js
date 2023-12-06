@@ -1,3 +1,4 @@
+import { createCard } from "../api/cardApi";
 import { closeModals } from "../utils/utils";
 
 const openAddCardModal = (listId) => {
@@ -48,6 +49,8 @@ export const listenToSubmitOnAddCardForm = () => {
     const addCardData = Object.fromEntries(addCardFormData);
 
     const listId = addCardModalElement.dataset.listId;
+
+    createCard(addCardData, listId);
 
     addCardToCardsListContainer(addCardData, listId);
 

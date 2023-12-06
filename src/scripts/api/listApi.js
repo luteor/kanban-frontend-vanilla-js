@@ -30,7 +30,6 @@ export const createList = async (listData) => {
     });
 
     if (!response.ok) {
-      console.log(response);
       const errorMessage = await response.text();
       throw new Error(
         `Request failed with status ${response.status}: ${errorMessage}`
