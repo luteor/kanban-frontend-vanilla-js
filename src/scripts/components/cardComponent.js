@@ -30,7 +30,6 @@ export const addCardToCardsListContainer = (addCardData, listId) => {
   newCardElement.querySelector(`[slot="card-title"]`).textContent =
     addCardData.title;
   newCardElement.querySelector(`[slot="card-id"]`).id = `card-${cardId}`;
-  console.log(newCardElement);
   newCardElement.querySelector(
     `#card-${cardId}`
   ).style.backgroundColor = `${addCardData.color}`;

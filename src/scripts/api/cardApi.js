@@ -23,6 +23,7 @@ export const createCard = async (cardData, listId) => {
     }
 
     const createdCard = await response.json();
+    console.log(createdCard);
     return createdCard;
   } catch (error) {
     console.error(error);

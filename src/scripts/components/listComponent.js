@@ -27,6 +27,8 @@ export const addListToListsContainer = (addListData) => {
 
   listsContainerElement.appendChild(newListElement);
 
+  listenToClickOnOpenEditListModalButton(listId);
+
   listenToClickOnOpenAddCardModalButton(listId);
 };
 
@@ -38,6 +40,7 @@ export const listenToSubmitOnAddListForm = () => {
 
     const addListFormData = new FormData(addListFormElement);
     const addListData = Object.fromEntries(addListFormData);
+    console.log(addListData);
 
     createList(addListData);
 
@@ -46,5 +49,21 @@ export const listenToSubmitOnAddListForm = () => {
     addListFormElement.reset();
 
     closeModals();
+  });
+};
+
+const openEditListModal = (listId) => {
+  const editListModalElement = document.querySelector("#edit-list-modal");
+  editListModalElement.classList.add("is-active");
+  editListModalElement.dataset.listId = listId;
+};
+
+export const listenToClickOnOpenEditListModalButton = (listId) => {
+  const openEditListModalButtonElement = document.querySelector(
+    `#list-${listId} [slot="list-name"]`
+  );
+
+  openEditListModalButtonElement.addEventListener("click", () => {
+    openEditListModal(listId);
   });
 };
