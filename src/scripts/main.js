@@ -1,5 +1,8 @@
 import { getAllLists } from "./api/listApi";
-import { listenToSubmitOnAddCardForm } from "./components/cardComponent";
+import {
+  addCardToCardsListContainer,
+  listenToSubmitOnAddCardForm,
+} from "./components/cardComponent";
 import {
   addListToListsContainer,
   listenToClickOnOpenAddListModalButton,
@@ -7,10 +10,15 @@ import {
 } from "./components/listComponent";
 import { listenToClickOnCloseModalButtonsAndOnModalBackground } from "./utils/utils";
 
-const displayExistingLists = async () => {
+const displayExistingListsWithCards = async () => {
   const lists = await getAllLists();
-  lists.forEach((element) => {
-    addListToListsContainer(element);
+  lists.forEach((list) => {
+    addListToListsContainer(list);
+
+    const cards = list.cards;
+    cards.forEach((card) => {
+      addCardToCardsListContainer(card, list.id);
+    });
   });
 };
 
@@ -21,5 +29,5 @@ const listenToUserActions = () => {
   listenToSubmitOnAddCardForm();
 };
 
-displayExistingLists();
+displayExistingListsWithCards();
 listenToUserActions();

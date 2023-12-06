@@ -8,7 +8,7 @@ const openAddCardModal = (listId) => {
 
 export const listenToClickOnOpenAddCardModalButton = (listId) => {
   const openAddCardModalButtonElement = document.querySelector(
-    `#list-${listId}`
+    `#list-${listId} [slot="add-card-button"]`
   );
 
   openAddCardModalButtonElement.addEventListener("click", () => {
@@ -16,8 +16,8 @@ export const listenToClickOnOpenAddCardModalButton = (listId) => {
   });
 };
 
-const addCardToCardsListContainer = (addCardData, listId) => {
-  const cardId = listId;
+export const addCardToCardsListContainer = (addCardData, listId) => {
+  const cardId = addCardData.id;
 
   const listElement = document.querySelector(`#list-${listId}`);
   const cardsListContainerElement =
