@@ -76,6 +76,7 @@
         <div class="modal-card-foot">
           <button class="button is-success">Validate</button>
           <button class="button close" type="button">Cancel</button>
+          <button class="button is-danger ml-auto" type="button">Delete list</button>
         </div>
       </form>
     </div>
@@ -131,6 +132,29 @@
       </form>
     </div>
   </div>
+
+  <!-- Delete a list modal -->
+  <div class="modal" id="delete-list-modal">
+    <div class="modal-background"></div>
+    <div class="modal-list">
+      <form>
+        <div class="modal-list-head">
+          <p class="modal-list-title">Deleting a list</p>
+          <button class="delete close" type="button" aria-label="close"></button>
+        </div>
+
+        <div class="modal-list-body">
+          <div class="label">Attention. You are about to delete this card. This operation is irreversible.</div>
+        </div>
+
+        <div class="modal-list-foot">
+          <button class="button is-danger">Delete</button>
+          <button class="button close" type="button">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 
   <!-- Delete a card modal -->
   <div class="modal" id="delete-card-modal">
