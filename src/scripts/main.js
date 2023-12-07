@@ -9,6 +9,7 @@ import {
   addListToListsContainer,
   listenToClickOnOpenAddListModalButton,
   listenToSubmitOnAddListForm,
+  listenToSubmitOnDeleteListForm,
   listenToSubmitOnEditListForm,
 } from "./components/listComponent";
 import { listenToClickOnCloseModalButtonsAndOnModalBackground } from "./utils/utils";
@@ -33,6 +34,7 @@ const listenToUserActions = () => {
   listenToSubmitOnEditListForm();
   listenToSubmitOnEditCardForm();
   listenToSubmitOnDeleteCardForm();
+  listenToSubmitOnDeleteListForm();
 };
 
 displayExistingListsWithCards();

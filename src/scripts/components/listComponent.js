@@ -123,3 +123,24 @@ export const listenToClickOnOpenDeleteListModalButton = (listId) => {
     openDeleteListModal(listId);
   });
 };
+
+export const deleteListInListsContainer = (listId) => {
+  const listElement = document.querySelector(`#list-${listId}`);
+
+  listElement.remove();
+};
+
+export const listenToSubmitOnDeleteListForm = () => {
+  const deleteListModalElement = document.querySelector("#delete-list-modal");
+  const deleteListFormElement = deleteListModalElement.querySelector("form");
+
+  deleteListFormElement.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const listId = deleteListModalElement.dataset.listId;
+
+    deleteListInListsContainer(listId);
+
+    closeModals();
+  });
+};
