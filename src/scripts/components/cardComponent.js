@@ -37,6 +37,8 @@ export const addCardToCardsListContainer = (addCardData) => {
   cardsListContainerElement.appendChild(newCardElement);
 
   listenToClickOnOpenEditCardModalButton(cardId);
+
+  listenToClickOnOpenDeleteCardModalButton(cardId);
 };
 
 export const listenToSubmitOnAddCardForm = () => {
@@ -110,5 +112,21 @@ export const listenToSubmitOnEditCardForm = () => {
     editCardFormElement.reset();
 
     closeModals();
+  });
+};
+
+const openDeleteCardModal = (cardId) => {
+  const deleteCardModalElement = document.querySelector("#delete-card-modal");
+  deleteCardModalElement.classList.add("is-active");
+  deleteCardModalElement.dataset.cardId = cardId;
+};
+
+export const listenToClickOnOpenDeleteCardModalButton = (cardId) => {
+  const openDeleteCardModalButtonElement = document.querySelector(
+    `#card-${cardId} [slot="card-delete-button"]`
+  );
+
+  openDeleteCardModalButtonElement.addEventListener("click", () => {
+    openDeleteCardModal(cardId);
   });
 };
