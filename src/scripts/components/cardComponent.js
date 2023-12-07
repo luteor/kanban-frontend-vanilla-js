@@ -130,3 +130,26 @@ export const listenToClickOnOpenDeleteCardModalButton = (cardId) => {
     openDeleteCardModal(cardId);
   });
 };
+
+export const deleteCardInCardsListContainer = (cardId) => {
+  const cardElement = document.querySelector(`#card-${cardId}`);
+
+  cardElement.remove();
+};
+
+export const listenToSubmitOnDeleteCardForm = () => {
+  const deleteCardModalElement = document.querySelector("#delete-card-modal");
+  const deleteCardFormElement = deleteCardModalElement.querySelector("form");
+
+  deleteCardFormElement.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const cardId = deleteCardModalElement.dataset.cardId;
+
+    // const updatedCard = await modifyCard(editCardData, cardId);
+
+    deleteCardInCardsListContainer(cardId);
+
+    closeModals();
+  });
+};
