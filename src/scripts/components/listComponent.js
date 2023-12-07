@@ -30,6 +30,8 @@ export const addListToListsContainer = (addListData) => {
   listenToClickOnOpenEditListModalButton(listId);
 
   listenToClickOnOpenAddCardModalButton(listId);
+
+  listenToClickOnOpenDeleteListModalButton(listId);
 };
 
 export const listenToSubmitOnAddListForm = () => {
@@ -101,5 +103,23 @@ export const listenToSubmitOnEditListForm = () => {
     editListFormElement.reset();
 
     closeModals();
+  });
+};
+
+const openDeleteListModal = (listId) => {
+  const deleteListModalElement = document.querySelector("#delete-list-modal");
+  deleteListModalElement.classList.add("is-active");
+  deleteListModalElement.dataset.listId = listId;
+};
+
+export const listenToClickOnOpenDeleteListModalButton = (listId) => {
+  const openDeleteListModalButtonElement = document.querySelector(
+    `#edit-list-modal .is-danger`
+  );
+
+  openDeleteListModalButtonElement.addEventListener("click", () => {
+    closeModals();
+
+    openDeleteListModal(listId);
   });
 };
