@@ -30,8 +30,6 @@ export const addListToListsContainer = (addListData) => {
   listenToClickOnOpenEditListModalButton(listId);
 
   listenToClickOnOpenAddCardModalButton(listId);
-
-  listenToClickOnOpenDeleteListModalButton(listId);
 };
 
 export const listenToSubmitOnAddListForm = () => {
@@ -65,6 +63,8 @@ const openEditListModal = (listId) => {
 
   const newListNameElement = editListModalElement.querySelector("input");
   newListNameElement.placeholder = currentListName;
+
+  listenToClickOnOpenDeleteListModalButton(listId);
 };
 
 export const listenToClickOnOpenEditListModalButton = (listId) => {
