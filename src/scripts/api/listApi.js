@@ -67,3 +67,20 @@ export const modifyList = async (listData, listId) => {
     console.error(error);
   }
 };
+
+export const deleteList = async (listId) => {
+  try {
+    const response = await fetch(`${apiBaseUrl}/lists/${listId}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(
+        `Request failed with status ${response.status}: ${errorMessage}`
+      );
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};

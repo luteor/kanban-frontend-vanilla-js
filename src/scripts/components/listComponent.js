@@ -1,4 +1,4 @@
-import { createList, modifyList } from "../api/listApi";
+import { createList, deleteList, modifyList } from "../api/listApi";
 import { closeModals } from "../utils/utils";
 import { listenToClickOnOpenAddCardModalButton } from "./cardComponent";
 
@@ -138,6 +138,8 @@ export const listenToSubmitOnDeleteListForm = () => {
     event.preventDefault();
 
     const listId = deleteListModalElement.dataset.listId;
+
+    await deleteList(listId);
 
     deleteListInListsContainer(listId);
 
