@@ -54,3 +54,24 @@ export const modifyCard = async (cardData, cardId) => {
     console.error(error);
   }
 };
+
+export const deleteCard = async (cardId) => {
+  try {
+    const response = await fetch(`${apiBaseUrl}/cards/${cardId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(
+        `Request failed with status ${response.status}: ${errorMessage}`
+      );
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};

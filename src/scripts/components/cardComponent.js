@@ -1,4 +1,4 @@
-import { createCard, modifyCard } from "../api/cardApi";
+import { createCard, deleteCard, modifyCard } from "../api/cardApi";
 import { closeModals } from "../utils/utils";
 
 const openAddCardModal = (listId) => {
@@ -146,7 +146,7 @@ export const listenToSubmitOnDeleteCardForm = () => {
 
     const cardId = deleteCardModalElement.dataset.cardId;
 
-    // const updatedCard = await modifyCard(editCardData, cardId);
+    await deleteCard(cardId);
 
     deleteCardInCardsListContainer(cardId);
 
