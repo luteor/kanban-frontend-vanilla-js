@@ -1,6 +1,9 @@
 export const closeModals = () => {
   const modalElements = document.querySelectorAll(".modal");
   modalElements.forEach((element) => {
+    for (const key in element.dataset) {
+      delete element.dataset[key];
+    }
     element.classList.remove("is-active");
   });
 };
