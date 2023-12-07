@@ -59,10 +59,6 @@ export const deleteCard = async (cardId) => {
   try {
     const response = await fetch(`${apiBaseUrl}/cards/${cardId}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
     });
 
     if (!response.ok) {

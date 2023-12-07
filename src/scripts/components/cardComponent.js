@@ -1,5 +1,5 @@
 import { createCard, deleteCard, modifyCard } from "../api/cardApi";
-import { closeModals } from "../utils/utils";
+import { closeModals, rgbColorToHexColor } from "../utils/utils";
 
 const openAddCardModal = (listId) => {
   const addCardModalElement = document.querySelector("#add-card-modal");
@@ -72,8 +72,16 @@ const openEditCardModal = (cardId) => {
     `#card-${cardId} [slot="card-title"]`
   ).textContent;
 
-  const newCardNameElement = editCardModalElement.querySelector("input");
+  const newCardNameElement =
+    editCardModalElement.querySelector("#edit-card-title");
   newCardNameElement.placeholder = currentCardName;
+
+  const currentCardColor = document.querySelector(`#card-${cardId}`).style
+    .backgroundColor;
+
+  const newCardColorElement =
+    editCardModalElement.querySelector("#edit-card-color");
+  newCardColorElement.value = rgbColorToHexColor(currentCardColor);
 };
 
 export const listenToClickOnOpenEditCardModalButton = (cardId) => {
@@ -91,6 +99,9 @@ export const updateCardInCardsListContainer = (editCardData) => {
     `#card-${editCardData.id} [slot="card-title"]`
   );
   cardNameElement.textContent = editCardData.title;
+
+  const cardColorElement = document.querySelector(`#card-${editCardData.id}`);
+  cardColorElement.style.backgroundColor = editCardData.color;
 };
 
 export const listenToSubmitOnEditCardForm = () => {
