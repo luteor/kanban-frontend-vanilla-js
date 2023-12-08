@@ -30,6 +30,8 @@ export const addListToListsContainer = (addListData) => {
   listenToClickOnOpenEditListModalButton(listId);
 
   listenToClickOnOpenAddCardModalButton(listId);
+
+  listenToDragAndDropOnLists(listId);
 };
 
 export const listenToSubmitOnAddListForm = () => {
@@ -144,5 +146,70 @@ export const listenToSubmitOnDeleteListForm = () => {
     deleteListInListsContainer(listId);
 
     closeModals();
+  });
+};
+
+export const listenToDragAndDropOnLists = (listId) => {
+  const dragAndDropListElement = document.querySelector(`#list-${listId}`);
+
+  dragAndDropListElement.addEventListener("dragstart", (event) => {
+    event.dataTransfer.setData("text/plain", event.target.id);
+    dragAndDropListElement.classList.add("drag-element");
+  });
+};
+
+export const listenToDropOnListsDropZone = () => {
+  const listsDropZoneElement = document.querySelector(".drop-zone");
+  let isListZoneOver = false;
+
+  listsDropZoneElement.addEventListener("dragover", (event) => {
+    event.preventDefault();
+
+    const hoveredListItem = event.target.closest(".message");
+
+    if (hoveredListItem && !isListZoneOver) {
+      hoveredListItem.classList.add("hovered-list");
+      isListZoneOver = true;
+    }
+  });
+
+  listsDropZoneElement.addEventListener("dragleave", (event) => {
+    const hoveredListItem = event.target.closest(".message");
+
+    if (hoveredListItem && isListZoneOver) {
+      hoveredListItem.classList.remove("hovered-list");
+      isListZoneOver = false;
+    }
+  });
+
+  listsDropZoneElement.addEventListener("drop", (event) => {
+    event.preventDefault();
+
+    const droppedListElementId = event.dataTransfer.getData("text/plain");
+    const droppedListElement = document.querySelector(
+      `#${droppedListElementId}`
+    );
+
+    droppedListElement.classList.remove("drag-element");
+
+    const hoveredListItem = event.target.closest(".message");
+
+    if (hoveredListItem) {
+      if (isListZoneOver) {
+        hoveredListItem.classList.remove("hovered-list");
+      }
+
+      const hoveredRect = hoveredListItem.getBoundingClientRect();
+      const halfHoveredRect = (hoveredRect.left + hoveredRect.right) / 2;
+
+      if (event.clientX < halfHoveredRect) {
+        hoveredListItem.insertAdjacentElement(
+          "beforebegin",
+          droppedListElement
+        );
+      } else {
+        hoveredListItem.insertAdjacentElement("afterend", droppedListElement);
+      }
+    }
   });
 };

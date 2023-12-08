@@ -8,6 +8,7 @@ import {
 import {
   addListToListsContainer,
   listenToClickOnOpenAddListModalButton,
+  listenToDropOnListsDropZone,
   listenToSubmitOnAddListForm,
   listenToSubmitOnDeleteListForm,
   listenToSubmitOnEditListForm,
@@ -35,6 +36,7 @@ const listenToUserActions = () => {
   listenToSubmitOnEditCardForm();
   listenToSubmitOnDeleteCardForm();
   listenToSubmitOnDeleteListForm();
+  listenToDropOnListsDropZone();
 };
 
 displayExistingListsWithCards();

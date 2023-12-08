@@ -18,7 +18,7 @@
 
   <main>
 
-    <div id="lists-container" class="lists-container">
+    <div id="lists-container" class="lists-container drop-zone">
     </div>
 
     <!-- Add a list button -->
@@ -182,8 +182,8 @@
 
 <!-- Template for a list -->
 <template id="list-template">
-  <section class="message is-info" slot="list-id">
-    <div class="message-header draggable">
+  <section class="message is-info draggable" slot="list-id" draggable="true">
+    <div class="message-header ">
       <div class="is-clickable" slot="list-name"></div>
       <span class="icon is-clickable" slot="add-card-button"><i class="fas fa-plus"></i></span>
     </div>
@@ -195,7 +195,7 @@
 </template>
 
 <!-- Template for a card -->
-<template id="card-template">
+<template id="card-template" draggable="true">
   <article class="card draggable" slot="card-id">
     <div class="card-header">
       <div class="card-header-title has-text-weight-medium" slot="card-title"></div>

@@ -34,3 +34,11 @@ article:not(:last-child) {
 .draggable {
     cursor: move;
 }
+
+.drag-element {
+    opacity: 0.5;
+}
+
+.hovered-list {
+    opacity: 0.2;
+}
