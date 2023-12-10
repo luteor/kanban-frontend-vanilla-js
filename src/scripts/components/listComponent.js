@@ -153,8 +153,14 @@ export const listenToDragAndDropOnLists = (listId) => {
   const dragAndDropListElement = document.querySelector(`#list-${listId}`);
 
   dragAndDropListElement.addEventListener("dragstart", (event) => {
+    event.preventDefault();
     event.dataTransfer.setData("text/plain", event.target.id);
     dragAndDropListElement.classList.add("drag-element");
+  });
+
+  dragAndDropListElement.addEventListener("dragend", (event) => {
+    event.preventDefault();
+    dragAndDropListElement.classList.remove("drag-element");
   });
 };
 
@@ -180,15 +186,6 @@ export const listenToDropOnListsDropZone = () => {
       } else {
         hoveredListItem.insertAdjacentElement("afterend", draggedListElement);
       }
-    }
-  });
-
-  listsDropZoneElement.addEventListener("dragend", (event) => {
-    event.preventDefault();
-
-    const droppedListElement = document.querySelector(".drag-element");
-    if (droppedListElement) {
-      droppedListElement.classList.remove("drag-element");
     }
   });
 
