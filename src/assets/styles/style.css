@@ -38,7 +38,3 @@ article:not(:last-child) {
 .drag-element {
     opacity: 0.5;
 }
-
-.hovered-list {
-    opacity: 0.2;
-}

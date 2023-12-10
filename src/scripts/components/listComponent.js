@@ -160,25 +160,35 @@ export const listenToDragAndDropOnLists = (listId) => {
 
 export const listenToDropOnListsDropZone = () => {
   const listsDropZoneElement = document.querySelector(".drop-zone");
-  let isListZoneOver = false;
 
   listsDropZoneElement.addEventListener("dragover", (event) => {
     event.preventDefault();
 
     const hoveredListItem = event.target.closest(".message");
 
-    if (hoveredListItem && !isListZoneOver) {
-      hoveredListItem.classList.add("hovered-list");
-      isListZoneOver = true;
+    if (hoveredListItem) {
+      const draggedListElement = document.querySelector(".drag-element");
+
+      const hoveredRect = hoveredListItem.getBoundingClientRect();
+      const halfHoveredRect = (hoveredRect.left + hoveredRect.right) / 2;
+
+      if (event.clientX < halfHoveredRect) {
+        hoveredListItem.insertAdjacentElement(
+          "beforebegin",
+          draggedListElement
+        );
+      } else {
+        hoveredListItem.insertAdjacentElement("afterend", draggedListElement);
+      }
     }
   });
 
-  listsDropZoneElement.addEventListener("dragleave", (event) => {
-    const hoveredListItem = event.target.closest(".message");
+  listsDropZoneElement.addEventListener("dragend", (event) => {
+    event.preventDefault();
 
-    if (hoveredListItem && isListZoneOver) {
-      hoveredListItem.classList.remove("hovered-list");
-      isListZoneOver = false;
+    const droppedListElement = document.querySelector(".drag-element");
+    if (droppedListElement) {
+      droppedListElement.classList.remove("drag-element");
     }
   });
 
@@ -195,10 +205,6 @@ export const listenToDropOnListsDropZone = () => {
     const hoveredListItem = event.target.closest(".message");
 
     if (hoveredListItem) {
-      if (isListZoneOver) {
-        hoveredListItem.classList.remove("hovered-list");
-      }
-
       const hoveredRect = hoveredListItem.getBoundingClientRect();
       const halfHoveredRect = (hoveredRect.left + hoveredRect.right) / 2;
 
