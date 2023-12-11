@@ -17,7 +17,7 @@ import { listenToClickOnCloseModalButtonsAndOnModalBackground } from "./utils/ut
 
 const displayExistingListsWithCards = async () => {
   const lists = await getAllLists();
-  console.log(lists);
+
   lists.forEach((list) => {
     addListToListsContainer(list);
 

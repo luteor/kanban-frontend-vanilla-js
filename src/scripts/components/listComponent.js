@@ -26,7 +26,7 @@ export const addListToListsContainer = (addListData) => {
     addListData.name;
   newListElement.querySelector(`[slot="list-id"]`).id = `list-${listId}`;
 
-  newListElement.querySelector(`[slot="list-id"]`).dataset.position =
+  newListElement.querySelector(`[slot="list-id"]`).dataset.listPosition =
     listPosition;
 
   listsContainerElement.appendChild(newListElement);
@@ -155,14 +155,18 @@ export const listenToSubmitOnDeleteListForm = () => {
 
 export const listenToDragAndDropOnLists = (listId) => {
   const dragAndDropListElement = document.querySelector(`#list-${listId}`);
-  console.log(dragAndDropListElement);
 
   dragAndDropListElement.addEventListener("dragstart", (event) => {
     event.dataTransfer.setData("text/plain", event.target.id);
+    event.dataTransfer.setData(
+      "application/list-position",
+      event.target.dataset.listPosition
+    );
     dragAndDropListElement.classList.add("drag-element");
   });
 
   dragAndDropListElement.addEventListener("dragend", () => {
+    console.log("toto");
     dragAndDropListElement.classList.remove("drag-element");
   });
 };
@@ -170,24 +174,35 @@ export const listenToDragAndDropOnLists = (listId) => {
 export const listenToDropOnListsDropZone = () => {
   const listsDropZoneElement = document.querySelector(".drop-zone");
 
+  let originalHoveredListId = null;
+
   listsDropZoneElement.addEventListener("dragover", (event) => {
     event.preventDefault();
 
-    const hoveredListItem = event.target.closest(".message");
+    const hoveredListElement = event.target.closest(".message");
 
-    if (hoveredListItem) {
+    if (hoveredListElement) {
+      if (!hoveredListElement.classList.contains("fake-list")) {
+        originalHoveredListId = hoveredListElement.id;
+      }
+      console.log(originalHoveredListId);
+
       const draggedListElement = document.querySelector(".drag-element");
+      draggedListElement.classList.add("fake-list");
 
-      const hoveredRect = hoveredListItem.getBoundingClientRect();
+      const hoveredRect = hoveredListElement.getBoundingClientRect();
       const halfHoveredRect = (hoveredRect.left + hoveredRect.right) / 2;
 
       if (event.clientX < halfHoveredRect) {
-        hoveredListItem.insertAdjacentElement(
+        hoveredListElement.insertAdjacentElement(
           "beforebegin",
           draggedListElement
         );
       } else {
-        hoveredListItem.insertAdjacentElement("afterend", draggedListElement);
+        hoveredListElement.insertAdjacentElement(
+          "afterend",
+          draggedListElement
+        );
       }
     }
   });
@@ -196,25 +211,36 @@ export const listenToDropOnListsDropZone = () => {
     event.preventDefault();
 
     const droppedListElementId = event.dataTransfer.getData("text/plain");
+    const droppedListElementPosition = event.dataTransfer.getData(
+      "application/list-position"
+    );
+
     const droppedListElement = document.querySelector(
       `#${droppedListElementId}`
     );
+    droppedListElement.classList.remove("drag-element", "fake-list");
 
-    droppedListElement.classList.remove("drag-element");
+    console.log(droppedListElement);
 
-    const hoveredListItem = event.target.closest(".message");
+    const hoveredListElement = document.querySelector(
+      `#${originalHoveredListId}`
+    );
+    const hoveredListElementPosition = hoveredListElement.dataset.listPosition;
 
-    if (hoveredListItem) {
-      const hoveredRect = hoveredListItem.getBoundingClientRect();
+    if (hoveredListElement) {
+      const hoveredRect = hoveredListElement.getBoundingClientRect();
       const halfHoveredRect = (hoveredRect.left + hoveredRect.right) / 2;
 
       if (event.clientX < halfHoveredRect) {
-        hoveredListItem.insertAdjacentElement(
+        hoveredListElement.insertAdjacentElement(
           "beforebegin",
           droppedListElement
         );
       } else {
-        hoveredListItem.insertAdjacentElement("afterend", droppedListElement);
+        hoveredListElement.insertAdjacentElement(
+          "afterend",
+          droppedListElement
+        );
       }
     }
   });

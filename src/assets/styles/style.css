@@ -38,3 +38,7 @@ article:not(:last-child) {
 .drag-element {
     opacity: 0.5;
 }
+
+.fake-list {
+    opacity: 0.2;
+}
