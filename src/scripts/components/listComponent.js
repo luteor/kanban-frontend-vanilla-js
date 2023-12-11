@@ -1,4 +1,9 @@
-import { createList, deleteList, modifyList } from "../api/listApi";
+import {
+  createList,
+  deleteList,
+  getAllLists,
+  modifyList,
+} from "../api/listApi";
 import { closeModals } from "../utils/utils";
 import { listenToClickOnOpenAddCardModalButton } from "./cardComponent";
 
@@ -84,10 +89,13 @@ export const listenToClickOnOpenEditListModalButton = (listId) => {
 };
 
 export const updateListInListsContainer = (editListData) => {
-  const listNameElement = document.querySelector(
+  const listElement = document.querySelector(`#list-${editListData.id}`);
+  const listNameElement = listElement.querySelector(
     `#list-${editListData.id} [slot="list-name"]`
   );
   listNameElement.textContent = editListData.name;
+
+  listElement.dataset.listPosition = editListData.position;
 };
 
 export const listenToSubmitOnEditListForm = () => {
@@ -158,15 +166,10 @@ export const listenToDragAndDropOnLists = (listId) => {
 
   dragAndDropListElement.addEventListener("dragstart", (event) => {
     event.dataTransfer.setData("text/plain", event.target.id);
-    event.dataTransfer.setData(
-      "application/list-position",
-      event.target.dataset.listPosition
-    );
     dragAndDropListElement.classList.add("drag-element");
   });
 
   dragAndDropListElement.addEventListener("dragend", () => {
-    console.log("toto");
     dragAndDropListElement.classList.remove("drag-element");
   });
 };
@@ -179,15 +182,14 @@ export const listenToDropOnListsDropZone = () => {
   listsDropZoneElement.addEventListener("dragover", (event) => {
     event.preventDefault();
 
+    const draggedListElement = document.querySelector(".drag-element");
     const hoveredListElement = event.target.closest(".message");
 
-    if (hoveredListElement) {
+    if (hoveredListElement && hoveredListElement !== draggedListElement) {
       if (!hoveredListElement.classList.contains("fake-list")) {
         originalHoveredListId = hoveredListElement.id;
       }
-      console.log(originalHoveredListId);
 
-      const draggedListElement = document.querySelector(".drag-element");
       draggedListElement.classList.add("fake-list");
 
       const hoveredRect = hoveredListElement.getBoundingClientRect();
@@ -195,53 +197,47 @@ export const listenToDropOnListsDropZone = () => {
 
       if (event.clientX < halfHoveredRect) {
         hoveredListElement.insertAdjacentElement(
-          "beforebegin",
+          "afterend",
           draggedListElement
         );
-      } else {
+      } else if (event.clientX > halfHoveredRect) {
         hoveredListElement.insertAdjacentElement(
-          "afterend",
+          "beforebegin",
           draggedListElement
         );
       }
     }
   });
 
-  listsDropZoneElement.addEventListener("drop", (event) => {
+  listsDropZoneElement.addEventListener("drop", async (event) => {
     event.preventDefault();
 
     const droppedListElementId = event.dataTransfer.getData("text/plain");
-    const droppedListElementPosition = event.dataTransfer.getData(
-      "application/list-position"
-    );
-
     const droppedListElement = document.querySelector(
       `#${droppedListElementId}`
     );
+
     droppedListElement.classList.remove("drag-element", "fake-list");
 
-    console.log(droppedListElement);
+    if (!originalHoveredListId) {
+      console.error("Invalid position change");
+      return;
+    }
 
     const hoveredListElement = document.querySelector(
       `#${originalHoveredListId}`
     );
+
     const hoveredListElementPosition = hoveredListElement.dataset.listPosition;
 
-    if (hoveredListElement) {
-      const hoveredRect = hoveredListElement.getBoundingClientRect();
-      const halfHoveredRect = (hoveredRect.left + hoveredRect.right) / 2;
+    if (hoveredListElement && hoveredListElement !== droppedListElement) {
+      const listId = droppedListElementId.match(/\d+/);
+      await modifyList({ position: hoveredListElementPosition }, listId);
 
-      if (event.clientX < halfHoveredRect) {
-        hoveredListElement.insertAdjacentElement(
-          "beforebegin",
-          droppedListElement
-        );
-      } else {
-        hoveredListElement.insertAdjacentElement(
-          "afterend",
-          droppedListElement
-        );
-      }
+      const updatedLists = await getAllLists();
+      updatedLists.forEach((list) => {
+        updateListInListsContainer(list);
+      });
     }
   });
 };
