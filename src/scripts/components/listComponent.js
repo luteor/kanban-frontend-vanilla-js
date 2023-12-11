@@ -15,6 +15,7 @@ export const listenToClickOnOpenAddListModalButton = () => {
 
 export const addListToListsContainer = (addListData) => {
   const listId = addListData.id;
+  const listPosition = addListData.position;
 
   const listsContainerElement = document.querySelector("#lists-container");
 
@@ -24,6 +25,9 @@ export const addListToListsContainer = (addListData) => {
   newListElement.querySelector(`[slot="list-name"]`).textContent =
     addListData.name;
   newListElement.querySelector(`[slot="list-id"]`).id = `list-${listId}`;
+
+  newListElement.querySelector(`[slot="list-id"]`).dataset.position =
+    listPosition;
 
   listsContainerElement.appendChild(newListElement);
 
