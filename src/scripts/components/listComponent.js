@@ -157,6 +157,11 @@ export const listenToSubmitOnDeleteListForm = () => {
 
     deleteListInListsContainer(listId);
 
+    const updatedLists = await getAllLists();
+    updatedLists.forEach((list) => {
+      updateListInListsContainer(list);
+    });
+
     closeModals();
   });
 };
