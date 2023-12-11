@@ -151,15 +151,14 @@ export const listenToSubmitOnDeleteListForm = () => {
 
 export const listenToDragAndDropOnLists = (listId) => {
   const dragAndDropListElement = document.querySelector(`#list-${listId}`);
+  console.log(dragAndDropListElement);
 
   dragAndDropListElement.addEventListener("dragstart", (event) => {
-    event.preventDefault();
     event.dataTransfer.setData("text/plain", event.target.id);
     dragAndDropListElement.classList.add("drag-element");
   });
 
-  dragAndDropListElement.addEventListener("dragend", (event) => {
-    event.preventDefault();
+  dragAndDropListElement.addEventListener("dragend", () => {
     dragAndDropListElement.classList.remove("drag-element");
   });
 };
