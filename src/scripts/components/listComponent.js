@@ -184,18 +184,28 @@ export const listenToDropOnListsDropZone = () => {
 
   let originalHoveredListId = null;
 
+  let initialDraggedRect = null;
+  let finalDraggedRect = null;
+
+  listsDropZoneElement.addEventListener("dragstart", () => {
+    const draggedListElement = document.querySelector(".drag-element");
+    initialDraggedRect = draggedListElement.getBoundingClientRect();
+    console.log(initialDraggedRect);
+  });
+
   listsDropZoneElement.addEventListener("dragover", (event) => {
     event.preventDefault();
 
     const draggedListElement = document.querySelector(".drag-element");
+
     const hoveredListElement = event.target.closest(".message");
 
     if (hoveredListElement && hoveredListElement !== draggedListElement) {
-      if (!hoveredListElement.classList.contains("fake-list")) {
+      if (!hoveredListElement.classList.contains("drag-element")) {
+        console.log("toto");
         originalHoveredListId = hoveredListElement.id;
+        console.log(originalHoveredListId);
       }
-
-      draggedListElement.classList.add("fake-list");
 
       const hoveredRect = hoveredListElement.getBoundingClientRect();
       const halfHoveredRect = (hoveredRect.left + hoveredRect.right) / 2;
@@ -222,9 +232,11 @@ export const listenToDropOnListsDropZone = () => {
       `#${droppedListElementId}`
     );
 
-    droppedListElement.classList.remove("drag-element", "fake-list");
+    droppedListElement.classList.remove("drag-element");
 
-    if (!originalHoveredListId) {
+    finalDraggedRect = droppedListElement.getBoundingClientRect();
+
+    if (!originalHoveredListId || initialDraggedRect.x === finalDraggedRect.x) {
       console.error("Invalid position change");
       return;
     }
@@ -244,5 +256,6 @@ export const listenToDropOnListsDropZone = () => {
         updateListInListsContainer(list);
       });
     }
+    originalHoveredListId = null;
   });
 };
