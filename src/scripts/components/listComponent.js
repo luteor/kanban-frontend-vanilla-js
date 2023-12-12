@@ -15,32 +15,29 @@ const openAddListModal = () => {
 export const listenToClickOnOpenAddListModalButton = () => {
   const openAddListModalButtonElement =
     document.querySelector("#add-list-button");
+
   openAddListModalButtonElement.addEventListener("click", openAddListModal);
 };
 
 export const addListToListsContainer = (addListData) => {
-  const listId = addListData.id;
-  const listPosition = addListData.position;
+  const { id, position, name } = addListData;
 
   const listsContainerElement = document.querySelector("#lists-container");
 
   const listTemplateElement = document.querySelector("#list-template");
 
   const newListElement = listTemplateElement.content.cloneNode(true);
-  newListElement.querySelector(`[slot="list-name"]`).textContent =
-    addListData.name;
-  newListElement.querySelector(`[slot="list-id"]`).id = `list-${listId}`;
+  newListElement.querySelector(`[slot="list-name"]`).textContent = name;
+  newListElement.querySelector(`[slot="list-id"]`).id = `list-${id}`;
 
   newListElement.querySelector(`[slot="list-id"]`).dataset.listPosition =
-    listPosition;
+    position;
 
   listsContainerElement.appendChild(newListElement);
 
-  listenToClickOnOpenEditListModalButton(listId);
-
-  listenToClickOnOpenAddCardModalButton(listId);
-
-  listenToDragAndDropOnLists(listId);
+  listenToClickOnOpenEditListModalButton(id);
+  listenToClickOnOpenAddCardModalButton(id);
+  listenToDragAndDropOnLists(id);
 };
 
 export const listenToSubmitOnAddListForm = () => {
@@ -89,13 +86,14 @@ export const listenToClickOnOpenEditListModalButton = (listId) => {
 };
 
 export const updateListInListsContainer = (editListData) => {
-  const listElement = document.querySelector(`#list-${editListData.id}`);
-  const listNameElement = listElement.querySelector(
-    `#list-${editListData.id} [slot="list-name"]`
-  );
-  listNameElement.textContent = editListData.name;
+  const { id, position, name } = editListData;
 
-  listElement.dataset.listPosition = editListData.position;
+  const listElement = document.querySelector(`#list-${id}`);
+  listElement.dataset.listPosition = position;
+  const listNameElement = listElement.querySelector(
+    `#list-${id} [slot="list-name"]`
+  );
+  listNameElement.textContent = name;
 };
 
 export const listenToSubmitOnEditListForm = () => {
@@ -140,7 +138,6 @@ export const listenToClickOnOpenDeleteListModalButton = (listId) => {
 
 export const deleteListInListsContainer = (listId) => {
   const listElement = document.querySelector(`#list-${listId}`);
-
   listElement.remove();
 };
 
@@ -167,15 +164,15 @@ export const listenToSubmitOnDeleteListForm = () => {
 };
 
 export const listenToDragAndDropOnLists = (listId) => {
-  const dragAndDropListElement = document.querySelector(`#list-${listId}`);
+  const draggedListElement = document.querySelector(`#list-${listId}`);
 
-  dragAndDropListElement.addEventListener("dragstart", (event) => {
+  draggedListElement.addEventListener("dragstart", (event) => {
     event.dataTransfer.setData("text/plain", event.target.id);
-    dragAndDropListElement.classList.add("drag-element");
+    draggedListElement.classList.add("drag-element");
   });
 
-  dragAndDropListElement.addEventListener("dragend", () => {
-    dragAndDropListElement.classList.remove("drag-element");
+  draggedListElement.addEventListener("dragend", () => {
+    draggedListElement.classList.remove("drag-element");
   });
 };
 
@@ -183,14 +180,12 @@ export const listenToDropOnListsDropZone = () => {
   const listsDropZoneElement = document.querySelector(".drop-zone");
 
   let originalHoveredListId = null;
-
   let initialDraggedRect = null;
   let finalDraggedRect = null;
 
   listsDropZoneElement.addEventListener("dragstart", () => {
     const draggedListElement = document.querySelector(".drag-element");
     initialDraggedRect = draggedListElement.getBoundingClientRect();
-    console.log(initialDraggedRect);
   });
 
   listsDropZoneElement.addEventListener("dragover", (event) => {
@@ -202,9 +197,7 @@ export const listenToDropOnListsDropZone = () => {
 
     if (hoveredListElement && hoveredListElement !== draggedListElement) {
       if (!hoveredListElement.classList.contains("drag-element")) {
-        console.log("toto");
         originalHoveredListId = hoveredListElement.id;
-        console.log(originalHoveredListId);
       }
 
       const hoveredRect = hoveredListElement.getBoundingClientRect();
@@ -231,7 +224,6 @@ export const listenToDropOnListsDropZone = () => {
     const droppedListElement = document.querySelector(
       `#${droppedListElementId}`
     );
-
     droppedListElement.classList.remove("drag-element");
 
     finalDraggedRect = droppedListElement.getBoundingClientRect();
@@ -256,6 +248,7 @@ export const listenToDropOnListsDropZone = () => {
         updateListInListsContainer(list);
       });
     }
+
     originalHoveredListId = null;
   });
 };

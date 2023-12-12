@@ -18,27 +18,25 @@ export const listenToClickOnOpenAddCardModalButton = (listId) => {
 };
 
 export const addCardToCardsListContainer = (addCardData) => {
-  const cardId = addCardData.id;
+  const { id, title, color, list_id } = addCardData;
 
-  const listElement = document.querySelector(`#list-${addCardData.list_id}`);
+  const listElement = document.querySelector(`#list-${list_id}`);
   const cardsListContainerElement =
     listElement.querySelector(`[slot=list-content]`);
 
   const cardTemplateElement = document.querySelector("#card-template");
 
   const newCardElement = cardTemplateElement.content.cloneNode(true);
-  newCardElement.querySelector(`[slot="card-title"]`).textContent =
-    addCardData.title;
-  newCardElement.querySelector(`[slot="card-id"]`).id = `card-${cardId}`;
+  newCardElement.querySelector(`[slot="card-title"]`).textContent = title;
+  newCardElement.querySelector(`[slot="card-id"]`).id = `card-${id}`;
   newCardElement.querySelector(
-    `#card-${cardId}`
-  ).style.backgroundColor = `${addCardData.color}`;
+    `#card-${id}`
+  ).style.backgroundColor = `${color}`;
 
   cardsListContainerElement.appendChild(newCardElement);
 
-  listenToClickOnOpenEditCardModalButton(cardId);
-
-  listenToClickOnOpenDeleteCardModalButton(cardId);
+  listenToClickOnOpenEditCardModalButton(id);
+  listenToClickOnOpenDeleteCardModalButton(id);
 };
 
 export const listenToSubmitOnAddCardForm = () => {
@@ -95,13 +93,14 @@ export const listenToClickOnOpenEditCardModalButton = (cardId) => {
 };
 
 export const updateCardInCardsListContainer = (editCardData) => {
+  const { id, title, color } = editCardData;
   const cardNameElement = document.querySelector(
-    `#card-${editCardData.id} [slot="card-title"]`
+    `#card-${id} [slot="card-title"]`
   );
-  cardNameElement.textContent = editCardData.title;
+  cardNameElement.textContent = title;
 
-  const cardColorElement = document.querySelector(`#card-${editCardData.id}`);
-  cardColorElement.style.backgroundColor = editCardData.color;
+  const cardColorElement = document.querySelector(`#card-${id}`);
+  cardColorElement.style.backgroundColor = color;
 };
 
 export const listenToSubmitOnEditCardForm = () => {
@@ -144,7 +143,6 @@ export const listenToClickOnOpenDeleteCardModalButton = (cardId) => {
 
 export const deleteCardInCardsListContainer = (cardId) => {
   const cardElement = document.querySelector(`#card-${cardId}`);
-
   cardElement.remove();
 };
 
