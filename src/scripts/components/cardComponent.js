@@ -1,4 +1,5 @@
 import { createCard, deleteCard, modifyCard } from "../api/cardApi";
+import { getAllLists } from "../api/listApi";
 import { closeModals, rgbColorToHexColor } from "../utils/utils";
 
 const openAddCardModal = (listId) => {
@@ -18,7 +19,7 @@ export const listenToClickOnOpenAddCardModalButton = (listId) => {
 };
 
 export const addCardToCardsListContainer = (addCardData) => {
-  const { id, title, color, list_id } = addCardData;
+  const { id, title, color, list_id, position } = addCardData;
 
   const listElement = document.querySelector(`#list-${list_id}`);
   const cardsListContainerElement =
@@ -32,6 +33,8 @@ export const addCardToCardsListContainer = (addCardData) => {
   newCardElement.querySelector(
     `#card-${id}`
   ).style.backgroundColor = `${color}`;
+  newCardElement.querySelector(`[slot="card-id"]`).dataset.cardPosition =
+    position;
 
   cardsListContainerElement.appendChild(newCardElement);
 
@@ -94,10 +97,11 @@ export const listenToClickOnOpenEditCardModalButton = (cardId) => {
 };
 
 export const updateCardInCardsListContainer = (editCardData) => {
-  const { id, title, color } = editCardData;
+  const { id, title, color, position } = editCardData;
   const cardNameElement = document.querySelector(
     `#card-${id} [slot="card-title"]`
   );
+  cardNameElement.dataset.cardPosition = position;
   cardNameElement.textContent = title;
 
   const cardColorElement = document.querySelector(`#card-${id}`);
@@ -241,15 +245,19 @@ export const listenToDropOnCardsDropZone = () => {
         `#${originalHoveredCardId}`
       );
 
-      // const hoveredCardElementPosition = hoveredCardElement.dataset.cardPosition;
+      const hoveredCardElementPosition =
+        hoveredCardElement.dataset.cardPosition;
 
       if (hoveredCardElement && hoveredCardElement !== droppedCardElement) {
-        // const cardId = droppedCardElementId.match(/\d+/);
-        // await modifyList({ position: hoveredCardElementPosition }, listId);
-        // const updatedLists = await getAllLists();
-        // updatedLists.forEach((list) => {
-        //   updateListInListsContainer(list);
-        // });
+        const cardId = droppedCardElementId.match(/\d+/);
+        await modifyCard({ position: hoveredCardElementPosition }, cardId);
+        const updatedLists = await getAllLists();
+        updatedLists.forEach((list) => {
+          const updatedCards = list.cards;
+          updatedCards.forEach((card) => {
+            updateCardInCardsListContainer(card);
+          });
+        });
       }
 
       originalHoveredCardId = null;
