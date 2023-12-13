@@ -164,20 +164,19 @@ export const listenToSubmitOnDeleteListForm = () => {
 };
 
 export const listenToDragAndDropOnLists = (listId) => {
-  const draggedListElement = document.querySelector(`#list-${listId}`);
+  const draggedListHeaderElement = document.querySelector(
+    `#list-${listId} .draggable`
+  );
 
-  draggedListElement.addEventListener("dragstart", (event) => {
-    event.dataTransfer.setData("text/plain", event.target.id);
+  draggedListHeaderElement.addEventListener("dragstart", (event) => {
+    const draggedListElement = event.target.closest(".message");
+    event.dataTransfer.setData("text/plain", draggedListElement.id);
     draggedListElement.classList.add("drag-element");
-  });
-
-  draggedListElement.addEventListener("dragend", () => {
-    draggedListElement.classList.remove("drag-element");
   });
 };
 
 export const listenToDropOnListsDropZone = () => {
-  const listsDropZoneElement = document.querySelector(".drop-zone");
+  const listsDropZoneElement = document.querySelector(".lists-drop-zone");
 
   let originalHoveredListId = null;
   let initialDraggedRect = null;

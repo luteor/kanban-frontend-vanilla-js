@@ -18,7 +18,7 @@
 
   <main>
 
-    <div id="lists-container" class="lists-container drop-zone">
+    <div id="lists-container" class="lists-container lists-drop-zone">
     </div>
 
     <!-- Add a list button -->
@@ -182,8 +182,8 @@
 
 <!-- Template for a list -->
 <template id="list-template">
-  <section class="message is-info draggable" slot="list-id" draggable="true">
-    <div class="message-header ">
+  <section class="message is-info " slot="list-id">
+    <div class="message-header draggable" draggable="true">
       <div class="is-clickable" slot="list-name"></div>
       <span class="icon is-clickable" slot="add-card-button"><i class="fas fa-plus"></i></span>
     </div>
