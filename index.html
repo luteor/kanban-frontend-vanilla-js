@@ -188,15 +188,15 @@
       <span class="icon is-clickable" slot="add-card-button"><i class="fas fa-plus"></i></span>
     </div>
 
-    <div class="message-body" slot="list-content">
+    <div class="message-body cards-drop-zone" slot="list-content">
       <!-- Cards go here -->
     </div>
   </section>
 </template>
 
 <!-- Template for a card -->
-<template id="card-template" draggable="true">
-  <article class="card draggable" slot="card-id">
+<template id="card-template">
+  <article class="card draggable" slot="card-id" draggable="true">
     <div class="card-header">
       <div class="card-header-title has-text-weight-medium" slot="card-title"></div>
       <div class="card-header-icon">
