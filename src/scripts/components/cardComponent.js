@@ -37,6 +37,7 @@ export const addCardToCardsListContainer = (addCardData) => {
 
   listenToClickOnOpenEditCardModalButton(id);
   listenToClickOnOpenDeleteCardModalButton(id);
+  listenToDragAndDropOnCards(id);
 };
 
 export const listenToSubmitOnAddCardForm = () => {
@@ -160,5 +161,14 @@ export const listenToSubmitOnDeleteCardForm = () => {
     deleteCardInCardsListContainer(cardId);
 
     closeModals();
+  });
+};
+
+export const listenToDragAndDropOnCards = (cardId) => {
+  const draggedCardElement = document.querySelector(`#card-${cardId}`);
+
+  draggedCardElement.addEventListener("dragstart", (event) => {
+    event.dataTransfer.setData("text/plain", event.target.id);
+    draggedCardElement.classList.add("drag-card-element");
   });
 };
