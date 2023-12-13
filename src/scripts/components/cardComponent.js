@@ -172,3 +172,87 @@ export const listenToDragAndDropOnCards = (cardId) => {
     draggedCardElement.classList.add("drag-card-element");
   });
 };
+
+export const listenToDropOnCardsDropZone = () => {
+  const cardsDropZoneElements = document.querySelectorAll(".cards-drop-zone");
+
+  cardsDropZoneElements.forEach((cardsDropZoneElement) => {
+    let originalHoveredCardId = null;
+    let initialDraggedRect = null;
+    let finalDraggedRect = null;
+
+    cardsDropZoneElement.addEventListener("dragstart", (event) => {
+      event.stopPropagation();
+      const draggedCardElement = document.querySelector(".drag-card-element");
+      initialDraggedRect = draggedCardElement.getBoundingClientRect();
+    });
+
+    cardsDropZoneElement.addEventListener("dragover", (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+
+      const draggedCardElement = document.querySelector(".drag-card-element");
+
+      const hoveredCardElement = event.target.closest(".card");
+
+      if (hoveredCardElement && hoveredCardElement !== draggedCardElement) {
+        if (!hoveredCardElement.classList.contains("drag-card-element")) {
+          originalHoveredCardId = hoveredCardElement.id;
+        }
+
+        const hoveredRect = hoveredCardElement.getBoundingClientRect();
+        const halfHoveredRect = (hoveredRect.top + hoveredRect.bottom) / 2;
+
+        if (event.clientY < halfHoveredRect) {
+          hoveredCardElement.insertAdjacentElement(
+            "afterend",
+            draggedCardElement
+          );
+        } else if (event.clientY > halfHoveredRect) {
+          hoveredCardElement.insertAdjacentElement(
+            "beforebegin",
+            draggedCardElement
+          );
+        }
+      }
+    });
+
+    cardsDropZoneElement.addEventListener("drop", async (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+
+      const droppedCardElementId = event.dataTransfer.getData("text/plain");
+      const droppedCardElement = document.querySelector(
+        `#${droppedCardElementId}`
+      );
+      droppedCardElement.classList.remove("drag-card-element");
+
+      finalDraggedRect = droppedCardElement.getBoundingClientRect();
+
+      if (
+        !originalHoveredCardId ||
+        initialDraggedRect.y === finalDraggedRect.y
+      ) {
+        console.error("Invalid position change");
+        return;
+      }
+
+      const hoveredCardElement = document.querySelector(
+        `#${originalHoveredCardId}`
+      );
+
+      // const hoveredCardElementPosition = hoveredCardElement.dataset.cardPosition;
+
+      if (hoveredCardElement && hoveredCardElement !== droppedCardElement) {
+        // const cardId = droppedCardElementId.match(/\d+/);
+        // await modifyList({ position: hoveredCardElementPosition }, listId);
+        // const updatedLists = await getAllLists();
+        // updatedLists.forEach((list) => {
+        //   updateListInListsContainer(list);
+        // });
+      }
+
+      originalHoveredCardId = null;
+    });
+  });
+};

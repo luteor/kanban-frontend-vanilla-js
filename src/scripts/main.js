@@ -1,6 +1,7 @@
 import { getAllLists } from "./api/listApi";
 import {
   addCardToCardsListContainer,
+  listenToDropOnCardsDropZone,
   listenToSubmitOnAddCardForm,
   listenToSubmitOnDeleteCardForm,
   listenToSubmitOnEditCardForm,
@@ -26,6 +27,7 @@ const displayExistingListsWithCards = async () => {
       addCardToCardsListContainer(card, list.id);
     });
   });
+  listenToDropOnCardsDropZone();
 };
 
 const listenToUserActions = () => {
