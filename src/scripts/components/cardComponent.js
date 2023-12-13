@@ -182,7 +182,12 @@ export const listenToDragAndDropOnCards = (cardId) => {
   const draggedCardElement = document.querySelector(`#card-${cardId}`);
 
   draggedCardElement.addEventListener("dragstart", (event) => {
+    event.stopPropagation();
     event.dataTransfer.setData("text/plain", event.target.id);
+    event.target.dataset.initialDraggedRect = JSON.stringify(
+      event.target.getBoundingClientRect()
+    );
+
     draggedCardElement.classList.add("drag-card-element");
   });
 };
@@ -191,15 +196,8 @@ export const listenToDropOnCardsDropZone = () => {
   const cardsDropZoneElements = document.querySelectorAll(".cards-drop-zone");
 
   cardsDropZoneElements.forEach((cardsDropZoneElement) => {
+    let isEmptyCardsDropZone = false;
     let originalHoveredCardId = null;
-    let initialDraggedRect = null;
-    let finalDraggedRect = null;
-
-    cardsDropZoneElement.addEventListener("dragstart", (event) => {
-      event.stopPropagation();
-      const draggedCardElement = document.querySelector(".drag-card-element");
-      initialDraggedRect = draggedCardElement.getBoundingClientRect();
-    });
 
     cardsDropZoneElement.addEventListener("dragover", (event) => {
       event.stopPropagation();
@@ -207,26 +205,35 @@ export const listenToDropOnCardsDropZone = () => {
 
       const draggedCardElement = document.querySelector(".drag-card-element");
 
-      const hoveredCardElement = event.target.closest(".card");
+      if (
+        event.target.classList.contains("cards-drop-zone") &&
+        event.target.childElementCount === 0
+      ) {
+        const emptyCardsDropZoneElement = event.target;
+        emptyCardsDropZoneElement.appendChild(draggedCardElement);
+        isEmptyCardsDropZone = true;
+      } else {
+        const hoveredCardElement = event.target.closest(".card");
 
-      if (hoveredCardElement && hoveredCardElement !== draggedCardElement) {
-        if (!hoveredCardElement.classList.contains("drag-card-element")) {
-          originalHoveredCardId = hoveredCardElement.id;
-        }
+        if (hoveredCardElement && hoveredCardElement !== draggedCardElement) {
+          if (!hoveredCardElement.classList.contains("drag-card-element")) {
+            originalHoveredCardId = hoveredCardElement.id;
+          }
 
-        const hoveredRect = hoveredCardElement.getBoundingClientRect();
-        const halfHoveredRect = (hoveredRect.top + hoveredRect.bottom) / 2;
+          const hoveredRect = hoveredCardElement.getBoundingClientRect();
+          const halfHoveredRect = (hoveredRect.top + hoveredRect.bottom) / 2;
 
-        if (event.clientY < halfHoveredRect) {
-          hoveredCardElement.insertAdjacentElement(
-            "afterend",
-            draggedCardElement
-          );
-        } else if (event.clientY > halfHoveredRect) {
-          hoveredCardElement.insertAdjacentElement(
-            "beforebegin",
-            draggedCardElement
-          );
+          if (event.clientY < halfHoveredRect) {
+            hoveredCardElement.insertAdjacentElement(
+              "afterend",
+              draggedCardElement
+            );
+          } else if (event.clientY > halfHoveredRect) {
+            hoveredCardElement.insertAdjacentElement(
+              "beforebegin",
+              draggedCardElement
+            );
+          }
         }
       }
     });
@@ -239,38 +246,67 @@ export const listenToDropOnCardsDropZone = () => {
       const droppedCardElement = document.querySelector(
         `#${droppedCardElementId}`
       );
+      const cardId = droppedCardElementId.match(/\d+/);
       droppedCardElement.classList.remove("drag-card-element");
 
-      finalDraggedRect = droppedCardElement.getBoundingClientRect();
+      const droppedCardListElement = droppedCardElement.closest(".message");
+      const droppedCardListElementId = droppedCardListElement.id;
+      const listId = droppedCardListElementId.match(/\d+/);
 
-      if (
-        !originalHoveredCardId ||
-        initialDraggedRect.y === finalDraggedRect.y
-      ) {
-        console.error("Invalid position change");
-        return;
-      }
+      if (isEmptyCardsDropZone) {
+        await modifyCard({ position: 1, list_id: listId }, cardId);
 
-      const hoveredCardElement = document.querySelector(
-        `#${originalHoveredCardId}`
-      );
-
-      const hoveredCardElementPosition =
-        hoveredCardElement.dataset.cardPosition;
-
-      if (hoveredCardElement && hoveredCardElement !== droppedCardElement) {
-        const cardId = droppedCardElementId.match(/\d+/);
-        await modifyCard({ position: hoveredCardElementPosition }, cardId);
         const updatedLists = await getAllLists();
+
         updatedLists.forEach((list) => {
           const updatedCards = list.cards;
           updatedCards.forEach((card) => {
             updateCardInCardsListContainer(card);
           });
         });
-      }
+        originalHoveredCardId = null;
+        isEmptyCardsDropZone = false;
+      } else {
+        const initialDraggedRect = JSON.parse(
+          droppedCardElement.dataset.initialDraggedRect
+        );
+        const finalDraggedRect = droppedCardElement.getBoundingClientRect();
 
-      originalHoveredCardId = null;
+        console.log("initialDraggedRect", initialDraggedRect);
+        console.log("finalDraggedRect", finalDraggedRect);
+
+        if (
+          !originalHoveredCardId ||
+          initialDraggedRect.y === finalDraggedRect.y
+        ) {
+          console.error("Invalid position change");
+          return;
+        }
+
+        const hoveredCardElement = document.querySelector(
+          `#${originalHoveredCardId}`
+        );
+
+        const hoveredCardElementPosition =
+          hoveredCardElement.dataset.cardPosition;
+
+        if (hoveredCardElement && hoveredCardElement !== droppedCardElement) {
+          await modifyCard(
+            { position: hoveredCardElementPosition, list_id: listId },
+            cardId
+          );
+          const updatedLists = await getAllLists();
+          updatedLists.forEach((list) => {
+            const updatedCards = list.cards;
+            updatedCards.forEach((card) => {
+              updateCardInCardsListContainer(card);
+            });
+          });
+        }
+
+        originalHoveredCardId = null;
+        isEmptyCardsDropZone = false;
+      }
     });
   });
 };

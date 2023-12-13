@@ -171,6 +171,9 @@ export const listenToDragAndDropOnLists = (listId) => {
   draggedListHeaderElement.addEventListener("dragstart", (event) => {
     const draggedListElement = event.target.closest(".message");
     event.dataTransfer.setData("text/plain", draggedListElement.id);
+    draggedListElement.dataset.initialDraggedRect = JSON.stringify(
+      draggedListElement.getBoundingClientRect()
+    );
     draggedListElement.classList.add("drag-element");
   });
 };
@@ -179,13 +182,6 @@ export const listenToDropOnListsDropZone = () => {
   const listsDropZoneElement = document.querySelector(".lists-drop-zone");
 
   let originalHoveredListId = null;
-  let initialDraggedRect = null;
-  let finalDraggedRect = null;
-
-  listsDropZoneElement.addEventListener("dragstart", () => {
-    const draggedListElement = document.querySelector(".drag-element");
-    initialDraggedRect = draggedListElement.getBoundingClientRect();
-  });
 
   listsDropZoneElement.addEventListener("dragover", (event) => {
     event.preventDefault();
@@ -225,7 +221,10 @@ export const listenToDropOnListsDropZone = () => {
     );
     droppedListElement.classList.remove("drag-element");
 
-    finalDraggedRect = droppedListElement.getBoundingClientRect();
+    const initialDraggedRect = JSON.parse(
+      droppedListElement.dataset.initialDraggedRect
+    );
+    const finalDraggedRect = droppedListElement.getBoundingClientRect();
 
     if (!originalHoveredListId || initialDraggedRect.x === finalDraggedRect.x) {
       console.error("Invalid position change");
