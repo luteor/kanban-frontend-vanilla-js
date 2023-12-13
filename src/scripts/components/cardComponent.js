@@ -98,10 +98,12 @@ export const listenToClickOnOpenEditCardModalButton = (cardId) => {
 
 export const updateCardInCardsListContainer = (editCardData) => {
   const { id, title, color, position } = editCardData;
-  const cardNameElement = document.querySelector(
+
+  const cardElement = document.querySelector(`#card-${id}`);
+  cardElement.dataset.cardPosition = position;
+  const cardNameElement = cardElement.querySelector(
     `#card-${id} [slot="card-title"]`
   );
-  cardNameElement.dataset.cardPosition = position;
   cardNameElement.textContent = title;
 
   const cardColorElement = document.querySelector(`#card-${id}`);
@@ -163,6 +165,14 @@ export const listenToSubmitOnDeleteCardForm = () => {
     await deleteCard(cardId);
 
     deleteCardInCardsListContainer(cardId);
+
+    const updatedLists = await getAllLists();
+    updatedLists.forEach((list) => {
+      const updatedCards = list.cards;
+      updatedCards.forEach((card) => {
+        updateCardInCardsListContainer(card);
+      });
+    });
 
     closeModals();
   });
