@@ -270,14 +270,14 @@ export const listenToDropOnCardsDropZone = () => {
         const initialDraggedRect = JSON.parse(
           droppedCardElement.dataset.initialDraggedRect
         );
-        const finalDraggedRect = droppedCardElement.getBoundingClientRect();
+        delete droppedCardElement.dataset.initialDraggedRect;
 
-        console.log("initialDraggedRect", initialDraggedRect);
-        console.log("finalDraggedRect", finalDraggedRect);
+        const finalDraggedRect = droppedCardElement.getBoundingClientRect();
 
         if (
           !originalHoveredCardId ||
-          initialDraggedRect.y === finalDraggedRect.y
+          (initialDraggedRect.y === finalDraggedRect.y &&
+            initialDraggedRect.x === finalDraggedRect.x)
         ) {
           console.error("Invalid position change");
           return;
