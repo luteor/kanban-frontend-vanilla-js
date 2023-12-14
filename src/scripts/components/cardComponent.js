@@ -203,10 +203,13 @@ export const listenToDropOnCardsDropZone = () => {
 
   cardsDropZoneElements.forEach((cardsDropZoneElement) => {
     cardsDropZoneElement.addEventListener("dragover", (event) => {
-      event.stopPropagation();
       event.preventDefault();
 
       const draggedCardElement = document.querySelector(".drag-card-element");
+
+      if (!draggedCardElement) {
+        return;
+      }
 
       if (
         event.target.classList.contains("cards-drop-zone") &&
@@ -237,12 +240,16 @@ export const listenToDropOnCardsDropZone = () => {
     });
 
     cardsDropZoneElement.addEventListener("drop", async (event) => {
-      event.stopPropagation();
       event.preventDefault();
 
       const droppedCardElementId = event.dataTransfer.getData(
         "text/plain-draggedCardId"
       );
+
+      if (!droppedCardElementId) {
+        return;
+      }
+
       const droppedCardElement = document.querySelector(
         `#${droppedCardElementId}`
       );
@@ -277,11 +284,8 @@ export const listenToDropOnCardsDropZone = () => {
 
       cardsFromDroppedCardListElements.forEach(async (card, index) => {
         const cardId = card.id.match(/\d+/);
-        console.log(cardId);
-        console.log(card);
 
         const newCardPosition = parseInt(index) + 1;
-        console.log(newCardPosition);
 
         const droppedListId = droppedCardListId.match(/\d+/);
 
@@ -303,7 +307,6 @@ export const listenToDropOnCardsDropZone = () => {
         const draggedCardListElement = document.querySelector(
           `#${draggedCardListId}`
         );
-        console.log(draggedCardListElement);
 
         const cardsFromDraggedCardListElements = Array.from(
           draggedCardListElement.querySelector(".cards-drop-zone").children
@@ -311,11 +314,8 @@ export const listenToDropOnCardsDropZone = () => {
 
         cardsFromDraggedCardListElements.forEach(async (card, index) => {
           const cardId = card.id.match(/\d+/);
-          console.log(cardId);
-          console.log(card);
 
           const newCardPosition = parseInt(index) + 1;
-          console.log(newCardPosition);
 
           const draggedListId = draggedCardListId.match(/\d+/);
 

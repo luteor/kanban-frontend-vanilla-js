@@ -170,10 +170,13 @@ export const listenToDragAndDropOnLists = (listId) => {
 
   draggedListHeaderElement.addEventListener("dragstart", (event) => {
     const draggedListElement = event.target.closest(".message");
+
     event.dataTransfer.setData("text/plain", draggedListElement.id);
+
     draggedListElement.dataset.initialDraggedRect = JSON.stringify(
       draggedListElement.getBoundingClientRect()
     );
+
     draggedListElement.classList.add("drag-element");
   });
 };
@@ -181,21 +184,18 @@ export const listenToDragAndDropOnLists = (listId) => {
 export const listenToDropOnListsDropZone = () => {
   const listsDropZoneElement = document.querySelector(".lists-drop-zone");
 
-  let originalHoveredListId = null;
-
   listsDropZoneElement.addEventListener("dragover", (event) => {
-    event.stopPropagation();
     event.preventDefault();
 
     const draggedListElement = document.querySelector(".drag-element");
 
+    if (!draggedListElement) {
+      return;
+    }
+
     const hoveredListElement = event.target.closest(".message");
 
     if (hoveredListElement && hoveredListElement !== draggedListElement) {
-      if (!hoveredListElement.classList.contains("drag-element")) {
-        originalHoveredListId = hoveredListElement.id;
-      }
-
       const hoveredRect = hoveredListElement.getBoundingClientRect();
       const halfHoveredRect = (hoveredRect.left + hoveredRect.right) / 2;
 
@@ -214,10 +214,14 @@ export const listenToDropOnListsDropZone = () => {
   });
 
   listsDropZoneElement.addEventListener("drop", async (event) => {
-    event.stopPropagation();
     event.preventDefault();
 
     const droppedListElementId = event.dataTransfer.getData("text/plain");
+
+    if (!droppedListElementId) {
+      return;
+    }
+
     const droppedListElement = document.querySelector(
       `#${droppedListElementId}`
     );
@@ -227,29 +231,29 @@ export const listenToDropOnListsDropZone = () => {
       droppedListElement.dataset.initialDraggedRect
     );
     delete droppedListElement.dataset.initialDraggedRect;
+
     const finalDraggedRect = droppedListElement.getBoundingClientRect();
 
-    if (!originalHoveredListId || initialDraggedRect.x === finalDraggedRect.x) {
+    if (initialDraggedRect.x === finalDraggedRect.x) {
       console.error("Invalid position change");
       return;
     }
 
-    const hoveredListElement = document.querySelector(
-      `#${originalHoveredListId}`
+    const listsElements = Array.from(
+      document.querySelector(".lists-drop-zone").children
     );
 
-    const hoveredListElementPosition = hoveredListElement.dataset.listPosition;
+    listsElements.forEach(async (list, index) => {
+      const listId = list.id.match(/\d+/);
 
-    if (hoveredListElement && hoveredListElement !== droppedListElement) {
-      const listId = droppedListElementId.match(/\d+/);
-      await modifyList({ position: hoveredListElementPosition }, listId);
+      const newListPosition = parseInt(index) + 1;
+
+      await modifyList({ position: newListPosition }, listId);
 
       const updatedLists = await getAllLists();
       updatedLists.forEach((list) => {
         updateListInListsContainer(list);
       });
-    }
-
-    originalHoveredListId = null;
+    });
   });
 };
