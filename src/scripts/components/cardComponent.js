@@ -183,7 +183,13 @@ export const listenToDragAndDropOnCards = (cardId) => {
 
   draggedCardElement.addEventListener("dragstart", (event) => {
     event.stopPropagation();
-    event.dataTransfer.setData("text/plain", event.target.id);
+
+    const draggedCardListElement = draggedCardElement.closest(".message");
+    const draggedCardListId = draggedCardListElement.id;
+
+    event.dataTransfer.setData("text/plain-draggedCardId", event.target.id);
+    event.dataTransfer.setData("text/plain-draggedListId", draggedCardListId);
+
     event.target.dataset.initialDraggedRect = JSON.stringify(
       event.target.getBoundingClientRect()
     );
@@ -196,9 +202,6 @@ export const listenToDropOnCardsDropZone = () => {
   const cardsDropZoneElements = document.querySelectorAll(".cards-drop-zone");
 
   cardsDropZoneElements.forEach((cardsDropZoneElement) => {
-    let isEmptyCardsDropZone = false;
-    let originalHoveredCardId = null;
-
     cardsDropZoneElement.addEventListener("dragover", (event) => {
       event.stopPropagation();
       event.preventDefault();
@@ -211,15 +214,10 @@ export const listenToDropOnCardsDropZone = () => {
       ) {
         const emptyCardsDropZoneElement = event.target;
         emptyCardsDropZoneElement.appendChild(draggedCardElement);
-        isEmptyCardsDropZone = true;
       } else {
         const hoveredCardElement = event.target.closest(".card");
 
         if (hoveredCardElement && hoveredCardElement !== draggedCardElement) {
-          if (!hoveredCardElement.classList.contains("drag-card-element")) {
-            originalHoveredCardId = hoveredCardElement.id;
-          }
-
           const hoveredRect = hoveredCardElement.getBoundingClientRect();
           const halfHoveredRect = (hoveredRect.top + hoveredRect.bottom) / 2;
 
@@ -242,59 +240,90 @@ export const listenToDropOnCardsDropZone = () => {
       event.stopPropagation();
       event.preventDefault();
 
-      const droppedCardElementId = event.dataTransfer.getData("text/plain");
+      const droppedCardElementId = event.dataTransfer.getData(
+        "text/plain-draggedCardId"
+      );
       const droppedCardElement = document.querySelector(
         `#${droppedCardElementId}`
       );
-      const cardId = droppedCardElementId.match(/\d+/);
+
       droppedCardElement.classList.remove("drag-card-element");
 
-      const droppedCardListElement = droppedCardElement.closest(".message");
-      const droppedCardListElementId = droppedCardListElement.id;
-      const listId = droppedCardListElementId.match(/\d+/);
+      const initialDraggedRect = JSON.parse(
+        droppedCardElement.dataset.initialDraggedRect
+      );
+      delete droppedCardElement.dataset.initialDraggedRect;
 
-      if (isEmptyCardsDropZone) {
-        await modifyCard({ position: 1, list_id: listId }, cardId);
+      const finalDraggedRect = droppedCardElement.getBoundingClientRect();
+
+      if (
+        initialDraggedRect.y === finalDraggedRect.y &&
+        initialDraggedRect.x === finalDraggedRect.x
+      ) {
+        console.error("Invalid position change");
+        return;
+      }
+
+      const draggedCardListId = event.dataTransfer.getData(
+        "text/plain-draggedListId"
+      );
+
+      const droppedCardListElement = droppedCardElement.closest(".message");
+      const droppedCardListId = droppedCardListElement.id;
+
+      const cardsFromDroppedCardListElements = Array.from(
+        droppedCardListElement.querySelector(".cards-drop-zone").children
+      );
+
+      cardsFromDroppedCardListElements.forEach(async (card, index) => {
+        const cardId = card.id.match(/\d+/);
+        console.log(cardId);
+        console.log(card);
+
+        const newCardPosition = parseInt(index) + 1;
+        console.log(newCardPosition);
+
+        const droppedListId = droppedCardListId.match(/\d+/);
+
+        await modifyCard(
+          { position: newCardPosition, list_id: droppedListId },
+          cardId
+        );
 
         const updatedLists = await getAllLists();
-
         updatedLists.forEach((list) => {
           const updatedCards = list.cards;
           updatedCards.forEach((card) => {
             updateCardInCardsListContainer(card);
           });
         });
-        originalHoveredCardId = null;
-        isEmptyCardsDropZone = false;
-      } else {
-        const initialDraggedRect = JSON.parse(
-          droppedCardElement.dataset.initialDraggedRect
+      });
+
+      if (draggedCardListId !== droppedCardListId) {
+        const draggedCardListElement = document.querySelector(
+          `#${draggedCardListId}`
         );
-        delete droppedCardElement.dataset.initialDraggedRect;
+        console.log(draggedCardListElement);
 
-        const finalDraggedRect = droppedCardElement.getBoundingClientRect();
-
-        if (
-          !originalHoveredCardId ||
-          (initialDraggedRect.y === finalDraggedRect.y &&
-            initialDraggedRect.x === finalDraggedRect.x)
-        ) {
-          console.error("Invalid position change");
-          return;
-        }
-
-        const hoveredCardElement = document.querySelector(
-          `#${originalHoveredCardId}`
+        const cardsFromDraggedCardListElements = Array.from(
+          draggedCardListElement.querySelector(".cards-drop-zone").children
         );
 
-        const hoveredCardElementPosition =
-          hoveredCardElement.dataset.cardPosition;
+        cardsFromDraggedCardListElements.forEach(async (card, index) => {
+          const cardId = card.id.match(/\d+/);
+          console.log(cardId);
+          console.log(card);
 
-        if (hoveredCardElement && hoveredCardElement !== droppedCardElement) {
+          const newCardPosition = parseInt(index) + 1;
+          console.log(newCardPosition);
+
+          const draggedListId = draggedCardListId.match(/\d+/);
+
           await modifyCard(
-            { position: hoveredCardElementPosition, list_id: listId },
+            { position: newCardPosition, list_id: draggedListId },
             cardId
           );
+
           const updatedLists = await getAllLists();
           updatedLists.forEach((list) => {
             const updatedCards = list.cards;
@@ -302,10 +331,7 @@ export const listenToDropOnCardsDropZone = () => {
               updateCardInCardsListContainer(card);
             });
           });
-        }
-
-        originalHoveredCardId = null;
-        isEmptyCardsDropZone = false;
+        });
       }
     });
   });

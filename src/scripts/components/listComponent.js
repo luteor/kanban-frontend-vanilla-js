@@ -184,6 +184,7 @@ export const listenToDropOnListsDropZone = () => {
   let originalHoveredListId = null;
 
   listsDropZoneElement.addEventListener("dragover", (event) => {
+    event.stopPropagation();
     event.preventDefault();
 
     const draggedListElement = document.querySelector(".drag-element");
@@ -213,6 +214,7 @@ export const listenToDropOnListsDropZone = () => {
   });
 
   listsDropZoneElement.addEventListener("drop", async (event) => {
+    event.stopPropagation();
     event.preventDefault();
 
     const droppedListElementId = event.dataTransfer.getData("text/plain");
@@ -224,6 +226,7 @@ export const listenToDropOnListsDropZone = () => {
     const initialDraggedRect = JSON.parse(
       droppedListElement.dataset.initialDraggedRect
     );
+    delete droppedListElement.dataset.initialDraggedRect;
     const finalDraggedRect = droppedListElement.getBoundingClientRect();
 
     if (!originalHoveredListId || initialDraggedRect.x === finalDraggedRect.x) {

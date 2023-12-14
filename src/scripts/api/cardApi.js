@@ -23,7 +23,6 @@ export const createCard = async (cardData, listId) => {
     }
 
     const createdCard = await response.json();
-    console.log(createdCard);
     return createdCard;
   } catch (error) {
     console.error(error);
@@ -49,6 +48,7 @@ export const modifyCard = async (cardData, cardId) => {
     }
 
     const updatedCard = await response.json();
+    console.log(updatedCard);
     return updatedCard;
   } catch (error) {
     console.error(error);
