@@ -182,8 +182,6 @@ export const listenToDragAndDropOnCards = (cardId) => {
   const draggedCardElement = document.querySelector(`#card-${cardId}`);
 
   draggedCardElement.addEventListener("dragstart", (event) => {
-    event.stopPropagation();
-
     const draggedCardListElement = draggedCardElement.closest(".message");
     const draggedCardListId = draggedCardListElement.id;
 
@@ -195,6 +193,10 @@ export const listenToDragAndDropOnCards = (cardId) => {
     );
 
     draggedCardElement.classList.add("drag-card-element");
+  });
+
+  draggedCardElement.addEventListener("dragend", () => {
+    draggedCardElement.classList.remove("drag-card-element");
   });
 };
 

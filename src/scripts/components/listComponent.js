@@ -179,6 +179,12 @@ export const listenToDragAndDropOnLists = (listId) => {
 
     draggedListElement.classList.add("drag-element");
   });
+
+  draggedListHeaderElement.addEventListener("dragend", (event) => {
+    const draggedListElement = event.target.closest(".message");
+
+    draggedListElement.classList.remove("drag-element");
+  });
 };
 
 export const listenToDropOnListsDropZone = () => {
