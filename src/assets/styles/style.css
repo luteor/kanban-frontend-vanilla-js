@@ -1,20 +1,21 @@
 body {
-    width: 90%;
     margin: 0 auto;
     overflow-x: hidden;
+    width: 90%;
 }
 
 main {
+    align-items: flex-start;
     display: flex;
-    overflow-x: auto;
-    gap: 20px;
     flex-wrap: nowrap;
+    gap: 20px;
+    overflow-x: auto;
 }
 
 .lists-container {
+    align-items: start;
     display: flex;
     gap: 20px;
-    align-items: start;
 }
 
 section {
@@ -38,8 +39,4 @@ article:not(:last-child) {
 
 .drag-element {
     opacity: 0.5;
-}
-
-.fake-list {
-    opacity: 0.2;
 }
