@@ -4,6 +4,8 @@ export const closeModals = () => {
     for (const key in element.dataset) {
       delete element.dataset[key];
     }
+    const formModalElement = element.querySelector("form");
+    formModalElement.reset();
     element.classList.remove("is-active");
   });
 };
