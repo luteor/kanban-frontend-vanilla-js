@@ -187,6 +187,8 @@ export const listenToDragAndDropOnLists = (listId) => {
   draggedListHeaderElement.addEventListener("dragend", (event) => {
     const draggedListElement = event.target.closest(".message");
 
+    delete draggedListElement.dataset.initialDraggedRect;
+
     draggedListElement.classList.remove("drag-element");
   });
 };

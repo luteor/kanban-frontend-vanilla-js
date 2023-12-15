@@ -201,6 +201,8 @@ export const listenToDragAndDropOnCards = (cardId) => {
   });
 
   draggedCardElement.addEventListener("dragend", () => {
+    delete draggedCardElement.dataset.initialDraggedRect;
+
     draggedCardElement.classList.remove("drag-card-element");
   });
 };
