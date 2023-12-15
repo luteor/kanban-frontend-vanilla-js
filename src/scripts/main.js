@@ -27,7 +27,6 @@ const displayExistingListsWithCards = async () => {
       addCardToCardsListContainer(card, list.id);
     });
   });
-  listenToDropOnCardsDropZone();
 };
 
 const listenToUserActions = () => {
@@ -40,7 +39,12 @@ const listenToUserActions = () => {
   listenToSubmitOnDeleteCardForm();
   listenToSubmitOnDeleteListForm();
   listenToDropOnListsDropZone();
+  listenToDropOnCardsDropZone();
 };
 
-displayExistingListsWithCards();
-listenToUserActions();
+const startApp = async () => {
+  await displayExistingListsWithCards();
+  listenToUserActions();
+};
+
+startApp();

@@ -48,7 +48,6 @@ export const modifyCard = async (cardData, cardId) => {
     }
 
     const updatedCard = await response.json();
-    console.log(updatedCard);
     return updatedCard;
   } catch (error) {
     console.error(error);
