@@ -6,6 +6,10 @@ const openAddCardModal = (listId) => {
   const addCardModalElement = document.querySelector("#add-card-modal");
   addCardModalElement.classList.add("is-active");
   addCardModalElement.dataset.listId = listId;
+
+  const addCardNameInputElement =
+    addCardModalElement.querySelector("#add-card-title");
+  addCardNameInputElement.focus();
 };
 
 export const listenToClickOnOpenAddCardModalButton = (listId) => {
@@ -74,16 +78,17 @@ const openEditCardModal = (cardId) => {
     `#card-${cardId} [slot="card-title"]`
   ).textContent;
 
-  const newCardNameElement =
+  const newCardNameInputElement =
     editCardModalElement.querySelector("#edit-card-title");
-  newCardNameElement.placeholder = currentCardName;
+  newCardNameInputElement.placeholder = currentCardName;
+  newCardNameInputElement.focus();
 
   const currentCardColor = document.querySelector(`#card-${cardId}`).style
     .backgroundColor;
 
-  const newCardColorElement =
+  const newCardColorInputElement =
     editCardModalElement.querySelector("#edit-card-color");
-  newCardColorElement.value = rgbColorToHexColor(currentCardColor);
+  newCardColorInputElement.value = rgbColorToHexColor(currentCardColor);
 };
 
 export const listenToClickOnOpenEditCardModalButton = (cardId) => {

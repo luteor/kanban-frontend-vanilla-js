@@ -10,6 +10,9 @@ import { listenToClickOnOpenAddCardModalButton } from "./cardComponent";
 const openAddListModal = () => {
   const addListModalElement = document.querySelector("#add-list-modal");
   addListModalElement.classList.add("is-active");
+
+  const addListNameInputElement = addListModalElement.querySelector("input");
+  addListNameInputElement.focus();
 };
 
 export const listenToClickOnOpenAddListModalButton = () => {
@@ -69,8 +72,9 @@ const openEditListModal = (listId) => {
     `#list-${listId} [slot="list-name"]`
   ).textContent;
 
-  const newListNameElement = editListModalElement.querySelector("input");
-  newListNameElement.placeholder = currentListName;
+  const newListNameInputElement = editListModalElement.querySelector("input");
+  newListNameInputElement.placeholder = currentListName;
+  newListNameInputElement.focus();
 
   listenToClickOnOpenDeleteListModalButton(listId);
 };
